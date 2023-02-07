@@ -4,25 +4,21 @@
 \usepackage{graphicx}
 \usepackage{afterpage}
 \usepackage[T1]{fontenc}
-\usepackage{imakeidx}
+\usepackage{afterpage}
+
 
 % commands
-\newcommand\emptypage{%
+\newcommand\blankpage{%
     \null%
     \thispagestyle{empty}%
     \addtocounter{page}{-1}%
     \newpage}
-    
-\afterpage{\emptypage}
-\makeindex
 
 % graphic settings
 \graphicspath{ {./images/} }
 
 \begin{document}
-
     \include{./sections/title_page/title_page.tex}
-    \emptypage%
     \tableofcontents
     \include{./sections/introduction/introduction.tex}
 
