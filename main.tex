@@ -5,7 +5,7 @@
 \usepackage{afterpage}
 \usepackage[T1]{fontenc}
 \usepackage{afterpage}
-
+\usepackage{fancyhdr}
 
 % commands
 \newcommand\blankpage{%
@@ -18,8 +18,22 @@
 \graphicspath{ {./images/} }
 
 \begin{document}
+    
+    % prima pagina
     \include{./sections/title_page/title_page.tex}
+
+    % indice
     \tableofcontents
+
+    % introduzione
     \include{./sections/introduction/introduction.tex}
 
+    % studio dei metodi
+    \include{./sections/first_part/studio.tex}
+
+
+    % bibliografia
+    \bibliographystyle{abbrv}
+    \bibliography{bibliography}
+    
 \end{document}  
