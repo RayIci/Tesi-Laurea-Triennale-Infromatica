@@ -5,7 +5,11 @@
 \usepackage{afterpage}
 \usepackage[T1]{fontenc}
 \usepackage{afterpage}
-\usepackage{fancyhdr}
+\usepackage[
+    backend=biber,
+    style=alphabetic,
+    sorting=ynt
+]{biblatex}
 
 % commands
 \newcommand\blankpage{%
@@ -17,8 +21,11 @@
 % graphic settings
 \graphicspath{ {./images/} }
 
+% Import the bibliography file
+\addbibresource{bibliograhpy.bib}
+
 \begin{document}
-    
+
     % prima pagina
     \include{./sections/title_page/title_page.tex}
 
@@ -28,12 +35,10 @@
     % introduzione
     \include{./sections/introduction/introduction.tex}
 
-    % studio dei metodi
+    % studio dei metodi ed applicazioni
     \include{./sections/first_part/studio.tex}
 
-
     % bibliografia
-    \bibliographystyle{abbrv}
-    \bibliography{bibliography}
-    
+    \printbibliography[heading=bibintoc, title={Bibliografia}]
+
 \end{document}  
