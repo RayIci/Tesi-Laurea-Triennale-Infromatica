@@ -5,6 +5,10 @@
 \usepackage{afterpage}
 \usepackage[T1]{fontenc}
 \usepackage{afterpage}
+\usepackage{amsmath,bm}
+\usepackage{amsthm}
+\usepackage{parskip}
+
 \usepackage[
     backend=biber,
     style=alphabetic,
@@ -16,13 +20,17 @@
     \null%
     \thispagestyle{empty}%
     \addtocounter{page}{-1}%
-    \newpage}
+    \newpage%
+}
 
 % graphic settings
 \graphicspath{ {./images/} }
 
 % Import the bibliography file
 \addbibresource{bibliograhpy.bib}
+
+\theoremstyle{definition}
+\newtheorem*{esempio}{Esempio}
 
 \begin{document}
 
