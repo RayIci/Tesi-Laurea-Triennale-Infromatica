@@ -9,8 +9,9 @@
 \usepackage{amsthm}
 \usepackage{parskip}
 \usepackage{minted}
-\usepackage{hyperref}
-
+\usepackage[hidelinks]{hyperref}
+\usepackage[backend=biber]{biblatex} 
+ 
 % commands
 \newcommand\blankpage{%
     \null%
@@ -29,6 +30,8 @@
 \theoremstyle{definition}
 \newtheorem*{esempio}{Esempio}
 
+% risorse bibliografia (run "biber main" to compile)
+\addbibresource{bibliography.bib}
 
 \begin{document}
 
@@ -45,5 +48,7 @@
     \include{./sections/first_part/studio.tex}
 
     % bibliografia
+    \section{Bibliografia}
+    \printbibliography[title=Bibliografia]
 
 \end{document}  
