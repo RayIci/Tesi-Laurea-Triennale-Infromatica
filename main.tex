@@ -8,12 +8,8 @@
 \usepackage{amsmath,bm}
 \usepackage{amsthm}
 \usepackage{parskip}
-
-\usepackage[
-    backend=biber,
-    style=alphabetic,
-    sorting=ynt
-]{biblatex}
+\usepackage{minted}
+\usepackage{hyperref}
 
 % commands
 \newcommand\blankpage{%
@@ -23,14 +19,16 @@
     \newpage%
 }
 
+% cambio del nome alla tabella dei contenuti
+\renewcommand*\contentsname{Indice}
+
 % graphic settings
 \graphicspath{ {./images/} }
 
-% Import the bibliography file
-\addbibresource{bibliograhpy.bib}
-
+% thm definitions
 \theoremstyle{definition}
 \newtheorem*{esempio}{Esempio}
+
 
 \begin{document}
 
@@ -47,6 +45,5 @@
     \include{./sections/first_part/studio.tex}
 
     % bibliografia
-    \printbibliography[heading=bibintoc, title={Bibliografia}]
 
 \end{document}  

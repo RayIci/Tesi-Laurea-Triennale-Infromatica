@@ -5,15 +5,19 @@ di essi una relativa implementazione e/o utilizzo.\\
 In primo luogo si troverà una definizione di serie temporale, seguita da
 una spiegazione dei metodi per manipolare i dati inerenti a serie temporali 
 su python, le componenti principali di una serie temporale e la loro visualizzazione
-ed infine metodi per l'analisi di essi. 
-
+ed infine metodi per l'analisi di essi.\\
+Molti degli esempi forniti in questa sezione fanno riferimento a dataset disponibili
+al sito ``UCI Machine Learning Repository''~\cite{dua:2019} più precisamente, come
+esempio, è stato utilizzato un dataset relativo alla qualità dell'aria della città di
+Beijing~\cite{dua:air_quality} (Pechino).
+ 
 \subsection{Cos'è una serie temporale}
 In statistica descrittiva, una serie storica (o temporale) si definisce come un insieme di variabili 
 casuali ordinate rispetto al tempo, ed esprime la dinamica di un certo 
 fenomeno nel tempo. Le serie storiche vengono studiate sia per 
 interpretare un fenomeno, individuando componenti di trend, di ciclicità, 
 di stagionalità e/o di accidentalità, sia per prevedere il suo 
-andamento futuro \cite{wiki:serie_storica}.
+andamento futuro~\cite{wiki:serie_storica}.
 In altre parole una serie storica (o temporale) è un'insieme/serie di dati
 capionati ed indicizzati nel tempo ad intervalli regolari come ore, giorni 
 o anni.\\
@@ -25,8 +29,7 @@ compreso tra $\bm{1}$ a $\bm{T}$, dove $\bm{T}$ è il numero totale degli interv
 periodi. Una serie temporale viene espressa in questa maniera 
 $\bm{Y_t} = \left\{  \bm{Y_1}, \bm{Y_2}, \dots , \bm{Y_T}  \right\}$.
 
-\begin{esempio} [Prezzo della benzina]
-
+\begin{esempio} [\textit{Prezzo della benzina}]
     Se consideriamo come fenomeno $\bm{Y}$ il prezzo della benzina dal $1970$ al $2010$
     avremmo come numero totale di osservazioni (o numero totale di periodi) 
     $\bm{T} = \bm{40}$ dove:
@@ -44,9 +47,40 @@ $\bm{Y_t} = \left\{  \bm{Y_1}, \bm{Y_2}, \dots , \bm{Y_T}  \right\}$.
 In questo sottocapitolo verranno spiegati i metodi studiati ed utilizzati per la gestione dei
 dati in python, più nello specifico come caricare un dataset, una possibile rinomina delle
 colonne ralative alle serie per una maggiore comprensione, individuazione dei valori
-nulli ed infine una sezione relativa al filtraggio.
+nulli ed infine una sezione relativa al filtraggio.\\
+
+\paragraph{Cosa viene inteso per dataset} Per dataset si intende un insieme di
+serie (nella nostra applicazione temporali) relative ad un'unica applicazione.
+
+\begin{esempio}[\textit{Qualità dell'aria}]
+    Consideriamo, per esempio, come applicazione le misurazioni di diversi parametri
+    relativi alla qualità dell'aria di Genova: livello di $\mathsf{CO_2}$,
+    livello di $\mathsf{SO_2}$, livello di $\mathsf{NO_2}$ e temperatura in \textdegree$\mathsf{C}$.
+    In un dataset possiamo considerare ogni parametro come una serie temporale diversa ma indicizzata
+    nel tempo in ugual maniera, quindi se queste misurazioni avvengono ogni ora avemo
+    per ogni istante di tempo $t$ le misurazioni per ogni parametro in quell'istante.
+    \begin{itemize}
+        \setlength\itemsep{-0.5em}
+        \item $Y_1$: livello di $\mathsf{CO_2}$, $\mathsf{SO_2}$, $\mathsf{NO_2}$ e temperatura in \textdegree$\mathsf{C}$ all'istante $1$.
+        \item $Y_2$: livello di $\mathsf{CO_2}$, $\mathsf{SO_2}$, $\mathsf{NO_2}$ e temperatura in \textdegree$\mathsf{C}$ all'istante $2$.
+        \item \dots
+        \item $Y_T$: livello di $\mathsf{CO_2}$, $\mathsf{SO_2}$, $\mathsf{NO_2}$ e temperatura in \textdegree$\mathsf{C}$ all'istante $T$.
+    \end{itemize}
+    Ogni parametro in un dataset viene rappresentato come una colonna.
+\end{esempio}
+
+\subsubsection{Pacchetti utilizzati}
+Per effettuare tutte le manovre relative all'elaborazione e manipolazione dei dati sono state
+utilizzate funzionalità fornite da pacchetti python come pandas e numpy, essi semplificano
+la scrittura di codice e velocizzano il tempo di sviluppo organizzando in maniera ottimale
+i dati.
 
 \subsubsection{Caricamento di un dataset}
+
+
+
+
+
 \subsubsection{Rinomina delle colonne relative alle serie}
 \subsubsection{Individuazione dei valori nulli e possibili soluzioni}
 \subsubsection{Filtraggio}
