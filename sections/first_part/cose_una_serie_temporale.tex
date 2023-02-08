@@ -1,0 +1,44 @@
+\section{Studio dei metodi e delle applicazioni}
+In tale capitolo verranno spiegati i metodi, le applicazioni ed i concetti 
+generali studiati durante la prima fase del tirocinio, accostando ad ogni 
+di essi una relativa implementazione e/o utilizzo.\\
+In primo luogo si troverà una definizione di serie temporale, seguita da
+una spiegazione dei metodi per manipolare i dati inerenti a serie temporali 
+su python, le componenti principali di una serie temporale e la loro visualizzazione
+ed infine metodi per l'analisi di essi.\\
+\\
+Molti degli esempi forniti in questa sezione fanno riferimento a dataset disponibili
+al sito ``UCI Machine Learning Repository''~\cite{dua:2019} più precisamente, come
+esempio, è stato utilizzato un dataset relativo alla qualità dell'aria della città di
+Beijing~\cite{dua:air_quality} (Pechino).
+ 
+\subsection{Cos'è una serie temporale}
+In statistica descrittiva, una serie storica (o temporale) si definisce come un insieme di variabili 
+casuali ordinate rispetto al tempo, ed esprime la dinamica di un certo 
+fenomeno nel tempo. Le serie storiche vengono studiate sia per 
+interpretare un fenomeno, individuando componenti di trend, di ciclicità, 
+di stagionalità e/o di accidentalità, sia per prevedere il suo 
+andamento futuro~\cite{wiki:serie_storica}.
+In altre parole una serie storica (o temporale) è un'insieme/serie di dati
+capionati ed indicizzati nel tempo ad intervalli regolari come ore, giorni 
+o anni.\\
+\\
+In termini più matematici: indichiamo con $\bm{Y}$ il fenomeno (ad esempio 
+il prezzo della benzina dall'anno $1970$ all'anno $2010$) ed indichiamo con
+$\bm{Y_t}$ un'ossevazione al tempo $\bm{t}$, con $\bm{t}$ un numero intero
+compreso tra $\bm{1}$ a $\bm{T}$, dove $\bm{T}$ è il numero totale degli intervalli o 
+periodi. Una serie temporale viene espressa in questa maniera 
+$\bm{Y_t} = \left\{  \bm{Y_1}, \bm{Y_2}, \dots , \bm{Y_T}  \right\}$.
+
+\begin{esempio} [\textit{Prezzo della benzina}]
+    Se consideriamo come fenomeno $\bm{Y}$ il prezzo della benzina dal $1970$ al $2010$
+    avremmo come numero totale di osservazioni (o numero totale di periodi) 
+    $\bm{T} = \bm{40}$ dove:
+    \begin{itemize}
+        \setlength\itemsep{-0.5em}
+        \item $\bm{Y_1}$: prezzo della benzina all'anno $1970$
+        \item $\bm{Y_2}$: prezzo della benzina all'anno $1971$
+        \item $\bm{Y_T} = \bm{Y_{40}}$: prezzo della benzina all'anno $2010$
+    \end{itemize}
+
+\end{esempio}
