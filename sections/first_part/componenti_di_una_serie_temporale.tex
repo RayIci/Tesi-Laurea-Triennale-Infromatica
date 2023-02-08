@@ -33,13 +33,13 @@ e quindi stimato.
 
 \begin{esempio} [esempio pratico di trend]
     Consideriamo come serie temporale una serie la cui per ogni osservazione abbiamo
-    la media mensile delle temperature della città di Beijing a partire 
+    la media giornaliera delle temperature nella città di Beijing a partire 
     dal $01/01/2013$ al $01/01/2017$.
 
     \begin{figure}[H]
         \centering
-        \includegraphics[width=\linewidth,height=4.7cm]{media_mensile_temp.png}
-        \caption{Media mensile delle temperature nella città di Beijing.}
+        \includegraphics[width=\linewidth,height=4.7cm]{media_giornaliera_temp.png}
+        \caption{Media giornaliera delle temperature nella città di Beijing.}
     \end{figure}
 
     Consideriamo ora un periodo di un anno ($365$ giorni) il trend avrà un grafico
@@ -47,16 +47,16 @@ e quindi stimato.
 
     \begin{figure}[H]
         \centering
-        \includegraphics[width=\linewidth,height=4.7cm]{media_mensile_temp_trend.png}
-        \caption{Trend della media mensile delle temperature nella città di Beijing.}
-        \label{fig:media_mensile_temp_trend}
+        \includegraphics[width=\linewidth,height=4.7cm]{media_giornaliera_temp_trend.png}
+        \caption{Trend della media giornaliera delle temperature nella città di Beijing.}
+        \label{fig:media_giornaliera_temp_trend}
     \end{figure}
-    Per poter capire meglio il grafico in figura~\ref*{fig:media_mensile_temp_trend} 
+    Per poter capire meglio il grafico in figura~\ref*{fig:media_giornaliera_temp_trend} 
     pensiamo che oggi sia il $01/01/2014$ e volgiamo sapere, con periodo un anno,
     il trend. Quello che facciamo è prendere i precedenti $365$ giorni e ne calcoliamo 
     la media, se è positiva abbiamo un tred crescente, se negativa abbiamo un trend decrescente
     mentre se è $0$ allora abbiamo un trend orizzontale. Se eseguiamo questo passaggio
-    per ogni giornata otteniamo il grafico in figura~\ref*{fig:media_mensile_temp_trend}.
+    per ogni giornata otteniamo il grafico in figura~\ref*{fig:media_giornaliera_temp_trend}.
 
 \end{esempio}
 
@@ -70,17 +70,22 @@ maggiori nei mesi estivi e minori in quelli invernali.
 La stagionalità può manifestarsi in diversi intervalli di tempo, 
 come giorni, settimane o mesi. La chiave per l'analisi delle serie temporali 
 è capire come la stagionalità influisce sulle nostre serie~\cite{md:seasonality}.
+
+In sintesi possiamo quindi pensare alla stagionalità come un pattern che si ripete ad 
+intervalli/periodi specifici nel tempo.
+
+
 \begin{esempio} [esempio pratico di stagionalità]
 
     Se consideriamo come serie temporale, la stessa medesima serie utilizzata 
     precedentemente nell'esempio sopra del trend, quindi una serie la cui 
-    ogni osservazione indica la media mensile delle temperature 
-    della città di Beijing a partire dal $01/01/2013$ al $01/01/2017$
+    ogni osservazione indica la media giornaliera delle temperature 
+    nella città di Beijing a partire dal $01/01/2013$ al $01/01/2017$
 
     \begin{figure}[H]
         \centering
-        \includegraphics[width=\linewidth,height=4.7cm]{media_mensile_temp.png}
-        \caption{Media mensile delle temperature nella città di Beijing.}
+        \includegraphics[width=\linewidth,height=4.7cm]{media_giornaliera_temp.png}
+        \caption{Media giornaliera delle temperature nella città di Beijing.}
     \end{figure}
 
     e consideriamo un periodo di un anno ($365$ giorni) la stagionalità avrà un grafico
@@ -88,15 +93,34 @@ come giorni, settimane o mesi. La chiave per l'analisi delle serie temporali
 
     \begin{figure}[H]
         \centering
-        \includegraphics[width=\linewidth,height=4.7cm]{media_mensile_temp_stagionalità.png}
-        \caption{Stagionalità della media mensile delle temperature nella città di Beijing.}
+        \includegraphics[width=\linewidth,height=4.7cm]{media_giornaliera_temp_stagionalità.png}
+        \caption{Stagionalità della media giornaliera delle temperature nella città di Beijing.}
     \end{figure}
 
 \end{esempio}
 
 
 \subsubsection{Residui}
+La componente di residui, o più comunemente detta noise, può essere considerata come
+la parte restante tra il trend e la stagionalità, quindi una sorta di errore.
 
+Un metodo per poter capire meglio come rappresenta la componente di residui 
+è considerare, ad esempio, una serie temporale con tred orizzontale e nessun pattern
+stagionale, ed applicare la definizione di residui, quindi tutto quello che rimane
+tolto il trend e la stagionalità.
+
+\begin{esempio} [esempio pratico di stagionalità]
+
+    Se consideriamo la serie temporale utilizzata negli esempi del trend
+    e della stagionalità, la componente dei residui avrà un grafico come il seguente
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\linewidth,height=4cm]{media_giornaliera_temp_residui.png}
+        \caption{Residui della media giornaliera delle temperature nella città di Beijing.}
+    \end{figure}
+
+\end{esempio}
 
 
 \subsubsection{Decomposizione di una serie}
@@ -117,7 +141,7 @@ all'istante di tempo $t$.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\linewidth]{additive_decomposition.jpg}
-    \caption{Decomposizione additiva (escluso residui).}
+    \caption{Decomposizione additiva (escluso residui). [ref imag~\cite{md:seas_dec_imags}]}
 \end{figure}
 
 
@@ -132,7 +156,7 @@ all'istante di tempo $t$.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\linewidth]{multiplicative_decomposition.jpg}
-    \caption{Decomposizione moltiplicativa (escluso residui).}
+    \caption{Decomposizione moltiplicativa (escluso residui). [ref imag~\cite{md:seas_dec_imags}]}
 \end{figure}
 
 \paragraph{Scelta della modalità di decomposizione}
@@ -144,5 +168,29 @@ della componente di stagionalità, appare proporzionale al livello della serie u
 moltiplicativa potrebbe essere più appropriata.
 
 
+\paragraph{Decomposizione in python}
+Vediamo ora come poter decomporre una serie temporale utilizzando la funzione 
+\texttt{seasonal\_decompose} fornita dalle funzionalità del pacchetto \texttt{statsmodels}.
+\subparagraph*{Installazione del pacchetto}
+\begin{minted}{bash}
+    pip install statsmodels
 
 
+
+\end{minted}
+
+\subparagraph*{Snippet}
+\begin{minted}{python3}
+    # import del pacchetto 
+    from statsmodels.tsa.seasonal import seasonal_decompose
+
+    # periodo utlizzato per il calcolo di trend e stagionalità
+    periodo = 365 
+
+    # decomposizione della seire
+    decomposition = seasonal_decompose(serie, period=periodo)
+
+    trend   = decomposition.trend     # trend
+    stag    = decomposition.seasonal  # stagionalità
+    residui = decomposition.resid     # residui
+\end{minted}
