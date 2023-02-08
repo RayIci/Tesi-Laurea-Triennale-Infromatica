@@ -39,7 +39,7 @@ e quindi stimato.
     \begin{figure}[H]
         \centering
         \includegraphics[width=\linewidth,height=4.7cm]{media_mensile_temp.png}
-        \caption{Media mensile delle temperature della città di Beijing.}
+        \caption{Media mensile delle temperature nella città di Beijing.}
     \end{figure}
 
     Consideriamo ora un periodo di un anno ($365$ giorni) il trend avrà un grafico
@@ -48,9 +48,15 @@ e quindi stimato.
     \begin{figure}[H]
         \centering
         \includegraphics[width=\linewidth,height=4.7cm]{media_mensile_temp_trend.png}
-        \caption{Trend media mensile delle temperature della città di Beijing.}
+        \caption{Trend della media mensile delle temperature nella città di Beijing.}
         \label{fig:media_mensile_temp_trend}
     \end{figure}
+    Per poter capire meglio il grafico in figura~\ref*{fig:media_mensile_temp_trend} 
+    pensiamo che oggi sia il $01/01/2014$ e volgiamo sapere, con periodo un anno,
+    il trend. Quello che facciamo è prendere i precedenti $365$ giorni e ne calcoliamo 
+    la media, se è positiva abbiamo un tred crescente, se negativa abbiamo un trend decrescente
+    mentre se è $0$ allora abbiamo un trend orizzontale. Se eseguiamo questo passaggio
+    per ogni giornata otteniamo il grafico in figura~\ref*{fig:media_mensile_temp_trend}.
 
 \end{esempio}
 
@@ -64,6 +70,29 @@ maggiori nei mesi estivi e minori in quelli invernali.
 La stagionalità può manifestarsi in diversi intervalli di tempo, 
 come giorni, settimane o mesi. La chiave per l'analisi delle serie temporali 
 è capire come la stagionalità influisce sulle nostre serie~\cite{md:seasonality}.
+\begin{esempio} [esempio pratico di stagionalità]
+
+    Se consideriamo come serie temporale, la stessa medesima serie utilizzata 
+    precedentemente nell'esempio sopra del trend, quindi una serie la cui 
+    ogni osservazione indica la media mensile delle temperature 
+    della città di Beijing a partire dal $01/01/2013$ al $01/01/2017$
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\linewidth,height=4.7cm]{media_mensile_temp.png}
+        \caption{Media mensile delle temperature nella città di Beijing.}
+    \end{figure}
+
+    e consideriamo un periodo di un anno ($365$ giorni) la stagionalità avrà un grafico
+    come il seguente
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\linewidth,height=4.7cm]{media_mensile_temp_stagionalità.png}
+        \caption{Stagionalità della media mensile delle temperature nella città di Beijing.}
+    \end{figure}
+
+\end{esempio}
 
 
 \subsubsection{Residui}
