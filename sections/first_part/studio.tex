@@ -72,18 +72,147 @@ serie (nella nostra applicazione temporali) relative ad un'unica applicazione.
 
 \subsubsection{Pacchetti utilizzati}
 Per effettuare tutte le manovre relative all'elaborazione e manipolazione dei dati sono state
-utilizzate funzionalità fornite da pacchetti python come pandas e numpy, essi semplificano
+utilizzate funzionalità fornite da pacchetti python come \texttt{pandas} e \texttt{numpy}, essi semplificano
 la scrittura di codice e velocizzano il tempo di sviluppo organizzando in maniera ottimale
-i dati.
+i dati. Per essere utilizzati essi necessitano prima di essere installati tramite il
+gestore di pacchetti di python \texttt{pip}.
+\paragraph{Snippet per l'installazione dei pacchetti}
+\begin{minted}{bash}
+    pip install pandas
+    pip install numpy
+\end{minted}
+\paragraph{Snippet per il caricamento in python}
+\begin{minted}{python3}
+    import pandas as pd
+    import numpy as np
+\end{minted}
+
+
 
 \subsubsection{Caricamento di un dataset}
+Per poter utilizzare i dati all'interno di python è stata utilizzata
+la funzionalità di pandas \texttt{read\_csv} dove, ogni colonna fa riferimento 
+ad una serie.
+\paragraph{Snippet}
+\begin{minted}{python3}
+    dataset = pd.read_csv('data.csv')
+\end{minted}
 
 
 
 
 
 \subsubsection{Rinomina delle colonne relative alle serie}
+In qualche case, il primo passo da eseguire, è quello di rinominare
+le colonne relative ad ogni serie così da poter avere una rappresentazione
+più accurata del dataset.
+Tramite l'utilizzo della funzione \texttt{display} e del metodo \texttt{head}
+del dataset possiamo controllare i primi $5$ valori di un dataset
+controllando anche così il nome di ogni colonna.
+\paragraph{Snippet}
+\begin{minted}{python3}
+    display(dataset.head())
+\end{minted}
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth,height=2.7cm]{head_before_rename.png}
+    \caption{output del metodo head prima della rinomina delle colonne}
+    \label{fig:head_before_rename}
+\end{figure}
+Come si può notare nell'immagine~\ref*{fig:head_before_rename} i nomi delle colonne 
+non hanno nessun nome significativo, con il seguente esempio potremmo
+cambiare il nome delle colonne.
+
+\paragraph{Snippet}
+\begin{minted}{python3}
+    # definizione di una lista di nomi per le colonne del dataset
+    dataset.columns = [ 'no',    'year',  'month', 'day', 'hour', 
+                        'pm2_5', 'pm10',  'so2',   'no2', 'co',  
+                        'o3',    'temp',  'pres',  'dewp','rain',  
+                        'wd',    'wspm',  'station']
+    display(dataset.head())
+\end{minted}
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth,height=2.7cm]{head_after_rename.png}
+    \caption{output del metodo head dopo la rinomina delle colonne}
+    \label{fig:head_after_rename}
+\end{figure}
+Come si può notare nell'immagine~\ref*{fig:head_after_rename}
+assegnando la lista delle colonne come attuali nomi per le serie del dataset
+riusciamo ad ottenere un'interpretazione più accurata.
+
+
+\subsubsection{Scelta dell'indice}
+Molte delle funzionalità fornite da \texttt{pandas} ed altri pacchetti python
+richiedono che il dataset sia indicizzato nel tempo nel corretto modo.
+In figura~\ref*{fig:head_after_rename} si può notare che la prima colonna
+senza nome e la seconda colonna con nome \texttt{no}, indichino
+il numero di riga per ogni misurazione, la differenza è che la prima colonna
+è generata automaticamente dal pacchetto \texttt{pandas}, ed impostata
+di default come indice, mentre la seconda con
+nome \texttt{no} è fornita direttamente dal file csv precedentemente caricato.
+Per l'analisi della maggior parte delle serie temporali un'idicizzazione per numero
+di riga non è significativa, sarebbe molto più conveniente lavorare avendo
+come indice di tabella la data ed ora di ogni effettiva misurazione.
+A questo proposito il dataset caricato ci fornisce delle colonne (\texttt{year}
+, \texttt{month}, \texttt{day} e \texttt{hour}) indicizzate per tempo e relative
+ad ogni misurazione, che possono essere riformattate insieme ed usate come indice
+per il dataset.\\
+\\
+\paragraph{Snippet}
+\begin{minted}{python3}
+    # unificazione delle colonne relative al tempo per ogni 
+    # istante di tempo t in una nuova colonna
+    new_index_column = []
+    for i in range(len(dataset.year)):
+    new_index_column.append("%s/%s/%s %s:0:0" 
+        % (dataset.day[i], dataset.month[i], 
+           dataset.year[i], dataset.hour[i]) )
+
+    # elimina le colonne relative al tempo
+    del dataset["year"], dataset["month"], 
+        dataset["day"], dataset["hour"], 
+        dataset["no"]
+
+    # imposta/crea la nuova colonna date e converti in datetime
+    dataset['date'] = new_index_column
+    dataset['date'] = pd.to_datetime(dataset.date, dayfirst=True)
+
+    # imposta come index la nuova colonna date
+    dataset.set_index("date", inplace=True)
+    display(dataset.head())
+\end{minted}
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth,height=2.7cm]{head_after_index_set.png}
+    \caption{output del metodo head dopo aver impostato l'indice}
+    \label{fig:head_after_index_set}
+\end{figure}
+Come si può notare dall'output del metodo \texttt{head} nell'immagine \ref*{fig:head_after_index_set}
+\texttt{date} è stato impostato come indice di tabella e quindi da questo momento in poi
+possiamo accedere al dataset, scegliendo le misurazioni interessate, utilizzando la
+data.
+
+\paragraph{Periodo di campionamento}
+Un'altra importante modifica è impostare il periodo di campionamento del dataset,
+in poche parole impostare un corretto indice non basta a massimizzare il corretto
+funzionamento delle funzionalità di analisi delle serie temporali, bisogna anche specificare
+l'istante di tempo che occorre tra una misurazione e l'altra. Per fare ciò
+\texttt{pandas} fornise un metodo che imposta il periodo di campionamento
+a quello deiderato, nel nostro caso sappiamo che le misurazioni sono state campionate
+ogni ora.
+\subparagraph{Snippet}
+\begin{minted}{python3}
+    # imposta il periodo di capionamento 
+    # di ogni osservazione ad ogni ora
+    dataset = dataset.asfreq("h")
+\end{minted}
+
 \subsubsection{Individuazione dei valori nulli e possibili soluzioni}
-\subsubsection{Filtraggio}
+La presenza di valori nulli in un dataset relativo a serie temporali
+
+
+
+
+
+% \subsubsection{Filtraggio}
 
 
