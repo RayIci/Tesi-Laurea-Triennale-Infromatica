@@ -277,3 +277,77 @@ tipo di segnale, porta a leggere delle misurazioni ``false''. Solitamente il rum
 indesiderato risiede nelle frequenze alte del segnale, quindi, a questo proposito,
 vediamo come poter filtrare una sorgente ``grezza'' di dati mediante l'utilizzo del
 modulo \texttt{signal} del pacchetto \texttt{scipy}.
+
+\paragraph{Filtro di Butterworth}
+Per poter rimuovere una buona parte del rumore, come scelta generale, in questo tirocinio,
+si è utilizzato il filtro di Butterworth che permette di regolare parametri come la 
+frequenza di taglio e l'inclinazione (slope) della curva di taglio.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth,keepaspectratio]{butterworth_filter.png}
+    \caption{Filtro di Butterworth normalizzato.}
+    \label{fig:butterworth_filter}
+\end{figure}
+
+Per poter apprezzare la differenza tra un segnale filtrato da un segnale ``grezzo''
+seguirà un esempio su come questo filtro possa essere applicato tramite l'utilizzo
+delle funzionalià fornite dal modulo precedentemente citato.
+
+\begin{esempio} [Utilizzo del filtro di Butterworth]
+Consideriamo un segnale la cui distanza tra ogni misurazione è di $\frac{1}{30}$
+di secondo, presenta una frequenza di campionamento di $30\mathsf{Hz}$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=4.2cm]{segnale_non_filtrato.png}
+    \caption{Segnale non filtrato.}
+    \label{fig:segnale_non_filtrato}
+\end{figure}
+
+In figura~\ref*{fig:segnale_non_filtrato} possiamo notare come nel segnale
+in questione sia presente parecchio rumore, facilmente visibile da tutti i picchi 
+presenti nel grafico. Proviamo ad applicare il filtro di Butterworth con una frequenza
+di taglio sulle $2\mathsf{Hz}$ ed un'inclinazione della curva di taglio di $5$, lasciando
+così passare le basse frequenze.
+
+
+\paragraph{Snippet}
+\begin{minted}{python3}
+    # slope/inclinazione della curva di taglio
+    inclinazione = 5 
+
+    # frequenza di taglio
+    frequenza_taglio = 2
+
+    # frequenza di campionamento
+    frequenza_di_campionamento = 30
+
+    # creazizone del filtro di Butterworth
+    b, a = signal.butter(inclinazione, 
+                        frequenza_taglio, 
+                        fs=frequenza_di_campionamento)
+
+    # applicazione del filtro sul segnale
+    segnale_filtrato = signal.filtfilt(b, a, series)
+\end{minted}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=4.2cm]{segnale_filtrato.png}
+    \caption{Segnale filtrato.}
+    \label{fig:segnale_filtrato}
+\end{figure}
+
+In figura~\ref*{fig:segnale_filtrato} viene rappresentato il segnale dopo l'applicazione
+del filtro passa basse di Butterworth, come si può notare una buona parte del rumore
+non è più presente e non avendo i picchi presentati nella sua versione non filtrata.
+
+\end{esempio}
+
+
+\paragraph{Scelta dei parametri e del filtro}
+Dipendendtemente dal tipo di filtraggio che si vuole ottenere conviene applicare un 
+filtro piuttosto che un altro e la sua relativa scelta dei parametri cambia da
+applicazione ad applicazione e dal tipo di risultato che si vuole ottenere.
+
