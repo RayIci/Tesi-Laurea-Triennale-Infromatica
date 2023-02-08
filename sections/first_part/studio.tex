@@ -44,10 +44,12 @@ $\bm{Y_t} = \left\{  \bm{Y_1}, \bm{Y_2}, \dots , \bm{Y_T}  \right\}$.
 \end{esempio}
 
 
+
+
 \subsection{Metodi per la gestione dei dati}
 In questo sottocapitolo verranno spiegati i metodi studiati ed utilizzati per la gestione dei
-dati in python, più nello specifico come caricare un dataset, una possibile rinomina delle
-colonne ralative alle serie per una maggiore comprensione, individuazione dei valori
+dati in python, più nello specifico: come caricare un dataset, una possibile rinomina delle
+colonne ralative alle serie per una maggiore comprensione, scelta di un indice, individuazione dei valori
 nulli ed infine una sezione relativa al filtraggio.
 
 \paragraph{Cosa viene inteso per dataset} Per dataset si intende un insieme di
@@ -69,6 +71,10 @@ serie (nella nostra applicazione temporali) relative ad un'unica applicazione.
     \end{itemize}
     Ogni parametro in un dataset viene rappresentato come una colonna.
 \end{esempio}
+Da qusto momento in poi, nel report, quando si parlerà di dataset varrà inteso il tipo
+\texttt{pandas.DataFrame}, cioè il modo in cui un dataset viene intrpretato all'interno
+di python, mentre per serie si intenderà il tipo \texttt{pandas.Series} oppure un semplice
+tipo \texttt{list} di python.
 
 \subsubsection{Pacchetti utilizzati}
 Per effettuare tutte le manovre relative all'elaborazione e manipolazione dei dati sono state
@@ -202,7 +208,7 @@ ogni ora.
 \subparagraph{Snippet}
 \begin{minted}{python3}
     # imposta il periodo di capionamento 
-    # di ogni osservazione ad ogni ora
+    # del dataset ad ogni ora
     dataset = dataset.asfreq("h")
 \end{minted}
 
