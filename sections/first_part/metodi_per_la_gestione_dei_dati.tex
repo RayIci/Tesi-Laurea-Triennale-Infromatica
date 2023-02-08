@@ -30,7 +30,7 @@ tipo \texttt{list} di python.
 
 \subsubsection{Pacchetti utilizzati}
 Per effettuare tutte le manovre relative all'elaborazione e manipolazione dei dati sono state
-utilizzate funzionalità fornite da pacchetti python come \texttt{pandas} e \texttt{numpy}, essi semplificano
+utilizzate funzionalità fornite da pacchetti python come \texttt{pandas}, \texttt{numpy} e \texttt{scipy}, essi semplificano
 la scrittura di codice e velocizzano il tempo di sviluppo organizzando in maniera ottimale
 i dati. Per essere utilizzati essi necessitano prima di essere installati tramite il
 gestore di pacchetti di python \texttt{pip}.
@@ -38,11 +38,13 @@ gestore di pacchetti di python \texttt{pip}.
 \begin{minted}{bash}
     pip install pandas
     pip install numpy
+    pip install scipy
 \end{minted}
 \paragraph{Snippet per il caricamento in python}
 \begin{minted}{python3}
     import pandas as pd
     import numpy as np
+    from scipy import signal
 \end{minted}
 
 
@@ -253,7 +255,7 @@ che semplicemente elimina i valori nulli da una serie potrebbe tornare comoda.
 \subparagraph*{Snippet}
 \begin{minted}{python3}
     import math as math # import del pacchetto math
-    
+
     def delete_nan(series: pd.Series | list):
     """ emlimina i valori nulla da una serie
     """
@@ -261,9 +263,17 @@ che semplicemente elimina i valori nulli da una serie potrebbe tornare comoda.
     for idx, value in enumerate(series):
         if not math.isnan(value):
             new_series.append(value)
-    return new_series
+    return np.array(new_series)
 \end{minted}
 
 
 \subsubsection{Filtraggio}
-
+Nella maggior parte dei casi quando si parla di serie temporali fonite direttamente 
+da apparecchiature che eseguono le misurazioni, i dati si presentano in maniera
+``grezza'' ed è quindi necessario filtrarli per poter rimuovere una buona parte
+del rumore presente. Questo passaggio è molto importante se parliamo di dati non elaborati
+in quanto avere del rumore in una serie temporale o, più in generale, in qualsiasi
+tipo di segnale, porta a leggere delle misurazioni ``false''. Solitamente il rumore
+indesiderato risiede nelle frequenze alte del segnale, quindi, a questo proposito,
+vediamo come poter filtrare una sorgente ``grezza'' di dati mediante l'utilizzo del
+modulo \texttt{signal} del pacchetto \texttt{scipy}.
