@@ -170,14 +170,99 @@ l'impossibilità da parte dello strumento di capionare ad un certo istante di te
 oppure se pensiamo ad una fotocamera che acquisisce delle coordinate relative ad un soggeto,
 l'usicta di esso dall'obbiettivo.
 
-Indifferentemente dal motivo per cui dei valori nulli sono presenti, in una serie o un dataset,
-la loro presenza può causare molti
+Indifferentemente dal motivo per cui dei valori nulli sono presenti, 
+in una serie o un dataset, la loro presenza può causare molti
 problemi sia nel corretto funzionamento di alcune funzionalità per l'analisi sia perchè
 non avere dei valori in determinati punti della serie, in certe applicazioni, potrebbe
 essere un problema. \texttt{pandas} fornisce dei metodi utili, e semplici, alla soluzione di questo
 problema ma ovviamente ogni problema è diverso e quindi, per applicazioni specifiche,
 potrebbe essere necessario cercare soluzioni differenti. In questa sezione ci limitiamo
 a descrivere le funzionalità fornite da \texttt{pandas} per la soluzione a questo problema.
+
+\paragraph{Controllo}
+Per controllare la presenza di valori nulli \texttt{pandas} fornisce un metodo chiamato
+\texttt{isna} che ritorna un dataset dove, per ogni misurazione, indica \texttt{True}
+se la misurazione è \texttt{NaN} altrimenti \texttt{False}. Sommando i valori \texttt{True}
+per ogni colonna possiamo controllare quanti valori nulli sono presenti per ogni serie.\\
+\\
+\subparagraph*{Snippet}
+\begin{minted}{python3}
+    # controllo valori nulli
+    dataset.isna().sum()
+\end{minted}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.24\linewidth,height=5cm]{somma_valori_nulli.png}
+    \caption{output della somma dei valori nulli relativi ad ogni serie del dataset}
+    \label{fig:sum_null}
+\end{figure}
+Come si puo notare dall'output del comando in figura~\ref*{fig:sum_null}
+il nostro dataset contiene molteplici valori nulli, ora vediamo come poter risolvere
+il segente problema
+
+\paragraph{Back fill o Forward fill}
+\texttt{pandas} fornisce la possibilità di ``riempire'' i valori nulli in due diverse
+modalità tramite l'utilizzo del metodo \texttt{fillna}
+\begin{itemize}
+    \item \textbf{Back fill}: permette di sostituire i valori nulli con la succesiva
+    misurazione valida.
+    \item \textbf{Forward fill}:  permette di sostituire i valori nulli propagando
+    l'ultima valida misurazione alla prossima valida.
+\end{itemize}
+Entrambi i metodi gestiscono i valori nulli più o meno nella stessa maniera ma la scelta
+di uno piuttosto che l'altro cambia da caso in caso dipendendtemente dal risultato
+ottenuto dopo l'utilizzo di essi.
+
+
+Per i nostri esempi il risulato nell'utilizzo di un metodo piuttosto che l'altro
+portava comunque ad un risultato soddisfacente.\\
+\\
+\subparagraph*{Snippet}
+\begin{minted}{python3}
+    # rimepimento dei valori nulli 
+    # mediante il metodo di forward fill
+    dataset = dataset.fillna(method="ffill")
+    dataset.isna().sum()
+\end{minted}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.24\linewidth,height=5cm]{somma_valori_nulli_dopo_fill.png}
+    \caption{output della somma dei valori nulli relativi ad ogni serie del dataset dopo l'utilizzo del metodo \texttt{fillna}.}
+\end{figure}
+
+
+\paragraph{Interpolazione} 
+Un possibile metodo, non fornito dalle funzionalità del pacchetto \texttt{pandas},
+che potrebbe essere utilizzato è quello di interpolare i dati così da poter colmare
+i vuoti creati dai valori nulli. Questa funzionalità non è stata sviluppata
+in quanto non fine allo scopo di questo tirocinio ma, in certe applicazioni, si potrebbe
+voler utilizzare una metodologia basata su questa tecnica per ottenere una rappresentazione
+più accurata dei dati.
+
+
+\paragraph{Altro metodo non convenzionale}
+Un altro metodo non convenzionale, non presente tra le funzionalità fornite,
+è quello di poter eliminare i valori nulli dalle serie semplicemente
+eliminandoli. Ovviamente questo concetto di eliminare una misurazione nulla va
+contro a tutte le premesse fatte fino ad ora, non avendo così una ``reale''
+serie temporale poichè mancherebbe una misurazione ad un determinato istante di tempo
+$t$, e molte delle analisi che si vorrebbero poter fare su una serie risulterebbero
+inapplicabili. 
+Tuttavia, in qualche applicazione particolare (come vedremo in seguito), una funzionalità
+che semplicemente elimina i valori nulli da una serie potrebbe tornare comoda.
+\subparagraph*{Snippet}
+\begin{minted}{python3}
+    import math as math # import del pacchetto math
+    
+    def delete_nan(series: pd.Series | list):
+    """ emlimina i valori nulla da una serie
+    """
+    new_series = []
+    for idx, value in enumerate(series):
+        if not math.isnan(value):
+            new_series.append(value)
+    return new_series
+\end{minted}
 
 
 \subsubsection{Filtraggio}
