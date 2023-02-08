@@ -213,12 +213,25 @@ ogni ora.
 \end{minted}
 
 \subsubsection{Individuazione dei valori nulli e possibili soluzioni}
-La presenza di valori nulli in un dataset relativo a serie temporali
+La presenza di valori nulli in una serie può avere molteplici cause, ad esempio,
+l'impossibilità da parte dello strumento di capionare ad un certo istante di tempo $t$,
+oppure se pensiamo ad una fotocamera che acquisisce delle coordinate relative ad un soggeto,
+l'usicta di esso dall'obbiettivo.
+
+Indifferentemente dal motivo per cui dei valori nulli sono presenti, in una serie o un dataset,
+la loro presenza può causare molti
+problemi sia nel corretto funzionamento di alcune funzionalità per l'analisi sia perchè
+non avere dei valori in determinati punti della serie, in certe applicazioni, potrebbe
+essere un problema. \texttt{pandas} fornisce dei metodi utili, e semplici, alla soluzione di questo
+problema ma ovviamente ogni problema è diverso e quindi, per applicazioni specifiche,
+potrebbe essere necessario cercare soluzioni differenti. In questa sezione ci limitiamo
+a descrivere le funzionalità fornite da \texttt{pandas} per la soluzione a questo problema.
 
 
 
 
 
-% \subsubsection{Filtraggio}
+\subsubsection{Filtraggio}
+\subsubsection{Analisi di anomalie}
 
 
