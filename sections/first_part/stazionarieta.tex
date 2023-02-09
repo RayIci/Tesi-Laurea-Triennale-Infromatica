@@ -80,3 +80,86 @@ Il primo consiste nell'osservare i dati. Visualizzando i dati dovrebbe essere
 facile identificare una variazione della media o una variazione dei dati. 
 Per una valutazione più accurata esiste il test di Dickey-Fuller~\cite{sa:stationary}.
 
+In statistica, il test di Dickey Fuller verifica l'ipotesi nulla della presenza
+di una radice unitaria in un modello autoregressivo di una serie temporale. 
+L'ipotesi alternativa è diversa a seconda della versione del test utilizzata, 
+ma di solito è la stazionarietà o la trend-stazionarietà~\cite{wiki:dickey_fuller}.
+
+\paragraph{Modello autoregressivo}
+Senza scendere troppo nei dettagli matematici diamo solamente la definizione di 
+cos'è un modello autoregressivo: 
+In statistica, econometria ed elaborazione dei segnali, 
+un modello autoregressivo (AR) è una rappresentazione di 
+un tipo di processo casuale; come tale, viene utilizzato 
+per descrivere alcuni processi variabili nel tempo in natura, 
+economia, comportamento, ecc.
+Un semplice modello AR è
+\[ y_t = \rho y_{t-1} + u_t \]
+dove $y_t$ è la nostra osservazione all'istante di tempo $t$, $\rho$ è un coefficiente
+e $u_t$ è l'errore (assunta essere white noise, quindi stazionaria)~\cite{wiki:dickey_fuller}.\\
+In altre parole se pensiamo alla nostra serie temporale ogni osservazione ad istante $t$
+dipende da un numero arbitrario osservazioni precedenti più un errore.
+
+\paragraph{Utilizzo del test nella pratica}
+Per poter utilizzare questo test nella pratica verranno sfruttate le 
+funzionalità del modulo \texttt{statsmodels.tsa.stattools} fornite dal 
+pacchetto \texttt{statsmodels} precedentemente utilizzato. Più
+precisamente la funzione fornita dal modulo è il test di 
+``Dichey-Fuller aumentato'' che fornisce un numero negativo, questo più 
+è negativo tanto maggiore è il rifiuto dell'ipotesi nulla che esista una unit root
+ad un certo livello di confidenza~\cite{wiki:aug_dickey_fuller}.
+
+\subparagraph*{Snippet}
+\begin{minted}{python3}
+    # import del modulo stattools
+    import statsmodels.tsa.stattools as sts
+
+    # esecuzione del test
+    adf = sts.adfuller(serie)
+
+    # test statistic
+    print('T-stat    : {}'.format(adf[0]))
+
+    # p-value
+    print('P-value   : {}'.format(adf[1]))
+
+    # numero di osservazioni utilizzate
+    print('n-val-used: {}'.format(adf[3]))
+
+    # valori critici
+    print('Valori critici:')
+    print('\t1%  : {}'.format(adf[4]["1%"]))
+    print('\t5%  : {}'.format(adf[4]["5%"]))
+    print('\t10% : {}'.format(adf[4]["10%"]))
+\end{minted}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\linewidth,keepaspectratio]{adfuller_test1.png}
+    \caption{Output dello snippet sopra indicato (augmented dickey Fuller test).}
+    \label{fig:adft_out_ns}
+\end{figure}
+
+In questo caso facendo riferimento all'output ottenuto, in figura~\ref*{fig:adft_out_ns},
+il valore interessato è \texttt{T-stat}, esso è da confrontare con i valori delle variabili
+relative alle percentuali di valore critico. Per ogni valore critico controlliamo se
+\texttt{T-stat} è maggiore o minore, nel nostro caso \texttt{T-stat} è maggiore del valore critico
+che si riferisce al $10\%$ quindi si ha più del $10\%$ di possibilità che la nostra ipotesi nulla
+non sia rifiutata. In altre parole abbiamo più del $10\%$ di possibilità che la nostra
+serie temporale non sia stazionaria. Solitamente per considerare una serie temporale 
+stazionaria si necessita almeno di $5\%$ quindi un livello di confidenza (che il test rifiuti
+l'ipotesi nulla e che quindi vede la nostra serie stazionaria) del $95\%$.
+Per semplificarci la vita possiamo direttamente controllare il valore di \texttt{p-value}
+(valore comprso tra $0 < \texttt{p-value} < 1$), se esso risulta minore di $0.05$ possiamo considerare
+la serie stazionaria.
+
+\paragraph{Come rendere una serie stazionaria}
+Nel caso ci trovassimo difronte ad una serie temporale non stazionaria esistono diverse
+tecniche per renderla stazionaria. Una delle tecniche più comuni, e che solitamente funziona per molte
+applicazioni, è calcolare la prima differenza (differenza di prim'ordine). Se consideriamo
+come $Y$ una serie temporale e con $\hat{Y}$ la medesima dopo aver calcolato la prima 
+differenza ogni osservazione di essa sarà definita come
+\[ \hat{y}_t = y_{t+1} - y_t \]
+dove $\hat{y}_t$ è un'ossevazione di $\hat{Y}$ ed $y_{t}$ un'ossevazione di $Y$, ad un istante
+di tempo $t$.
