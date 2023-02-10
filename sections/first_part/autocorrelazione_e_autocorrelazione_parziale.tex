@@ -163,14 +163,42 @@ def funzione_autocorrelazione(
         else np.array(autocorrelazione)
 \end{minted}
 
-\begin{esempio}[Autocorrelazione segnale con variazioni lente nel tempo]
-    
-\end{esempio}
+\begin{esempio}[Autocorrelazione]
+    Prendiamo come esepio un segnale la cui velocità cambia di ``poco''
+    nel tempo.
 
-\begin{esempio}[Autocorrelazione segnale con variazioni veloci nel tempo]
-    
-\end{esempio}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\linewidth,keepaspectratio]{autocor_vel_lenta.png}
+        \caption{Autocorrelazione del segnale.}
+        \label{fig:autcor_slow}
+    \end{figure}
 
+    In figura~\ref{fig:autcor_slow} possiamo notare come l'autocorrelazione non normalizzata
+    del segnale varia di poco nel tempo per segnali che variano lentamente.
+
+    Consideriamo ora più segnali la cui velocità cresce velocemente nel tempo.
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\linewidth,height=9cm]{autocor_vel_fast.png}
+        \caption{Autocorrelazione dei segnali.}
+        \label{fig:autcor_fast}
+    \end{figure}
+
+    In figura~\ref{fig:autcor_fast} possiamo notare come l'autocorrelazione non normalizzata
+    dei segnai varia maggiormente nel tempo per segnali che variano velocemente.
+
+    Possiamo quindi osservare come segnali con minima variazione nel tempo avranno anche
+    una minima variazione nell'autocorrelazione non normalizzata, mentre segnali che hanno
+    un'ampia variazione tra un'osservazione e quella successiva avranno una maggiore variazione 
+    anche nell'autocorrelazione non normalizzata.
+
+    Un'ulteriore osservazione che nasce dagli esempi sopra è che i segnali più 
+    correlati tra loro sono i segnali con una variazione minore nel tempo, mentre
+    i segnali meno correlati saranno i segnali con una maggior variazione. 
+
+\end{esempio}
 
 
 \subsubsection{Funzione di Autocorrelazione Parziale}
