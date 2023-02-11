@@ -1,10 +1,160 @@
-\section{Analisi e Soluzione}
+\section{Gestione dei dataset forniti}
+Il problema affrontato durante questa fase del tirocinio, di durata 1 mese, prevedeva di analizzare
+più dataset, relativi a soggetti sani e patologici, utilizzando le tecniche
+studiate durante la prima fase del tirocinio, apliamente descritte nella sezione
+precedente.
+
+In questo capitolo varrà presentato il problema affrontato, l'analisi di esso, le possibili soluzioni
+ed infine i risultati ottenuti.
+
+\subsection{Obbiettivo}
+Per ragioni di tempo e di semplicità
+
+
+\subsection{Suddivisione e gestione dei dataset}
+\subsubsection{Descrizione dei dataset}
+Durante il tirocinio sono stati forniti più dataset.
+Ogni dataset era relativo ad un paziente, sano o patologico, con una specifica camminata,
+più nel dettaglio i dataset erano relativi a camminate normali, sulle punte o tacco punta.
+Ogni dataset era formato da più serie temporali, quindi indicizzate nel tempo, relative
+alla posizione di un particolare giunto (esempio: piede destro, piede sinistro, naso \dots)
+
+\paragraph{Campionamento dei dati} I dati relativi ad ogni dataset sono stati ottenuti girando un video del soggetto in posizione
+laterale e lasciato camminare, avanti ed indietro per un corridoio, davanti all'obiettivo della telecamera. 
+Successivamente, i video registrati, sono stati analizzati utilizzando una libreria open source che, con un algoritmo
+di machine learning, riconosce i punti relativi alle giunture interessate. Per ogni frame del video
+è stato quindi possibile fornire la posizione dei giunti in pixel, sia sull'asse delle
+ascisse che delle ordinate, in riferimento al pixel $(0,0)$ del frame analizzato.
+
+Il campionamento dati e la successiva trasformazione di essi in dataset, contenenti le posizioni
+dei giunti di ogni soggetto, è stata svolta dal gruppo di ricerca del dipartimento che successivamente
+ci ha fornito i dataset elaborati.
+
+
+\begin{esempio}[Giuntura del naso]
+    Se per esempio prendiamo la giuntura del naso relativa ad uno dei dataset, indifferentemente
+    dal fatto che esso sia relativo ad un soggetto sano o patologico, essa presenta nel dataset una serie
+    chiamata \texttt{x\_naso} e \texttt{y\_naso} che rappresentano rispettivamente 
+    la posizione $x$ ed $y$ ad ogni frame acquisito dal video.
+\end{esempio}
+
+\subparagraph*{Frequenza di campionamento}
+La fotocamera utilizzata per registrare i video ha una frequenza di campionamento di 
+$30\mathsf{Hz}$, quindi ogni misurazione è distante dalla successiva circa $33,3\mathsf{ms}$.
+Detto ciò la fotocamera riuscirà a captare periodicità che avvengono al massimo ogni $66,6\mathsf{ms}$
+($15\mathsf{Hz}$), logicamente per sapere quando un certo evento inizia e finisce abbiamo
+bisogno di almeno $2$ misurazioni, più che sufficienti a captare periodicità che risultino
+significative all'analisi del movimento di un soggetto.
+
+\subparagraph*{Descrizione delle serie relative ad un dataset}
+I giunti forniti dai dataset sono: naso, torace, spalla destra, gomito destro, polso destro, 
+spalla sinistra, gomito sinistro, polso sinistro, cresta iliaca, anca destra, ginocchio destro, 
+caviglia destra, anca sinistra, ginocchio sinistro, caviglia sinistra, occhio destro, 
+occhio sinistro, zigomo destro, zigomo sinistro, piede sinistro ($3$ posizioni), 
+piede destro ($3$ posizioni).\\
+Per ognuno di questi giunti è presente una misura della posizione sull'asse delle ascisse, 
+una misura della posizione sull'asse delle ordinate ed una misura di likelihood cioè un numero
+tra $0$ ed $1$ che esprime quanto siamo sicuri di aver trovato il giunto nella posizione giusta
+(questa misurazione è stata ignorata).
+
+\subsubsection{Rinomina delle colonne dei dataset}
+I dataset sono stati forniti sprovvisti di una rappresentazione significativa per ogni colonna
+quindi, come prima operazione, sono state ridenominate tutte le colonne.
+
+Senza scendere troppo nei dettagli implementativi di come questa operazione è stata eseguita,
+poichè una tecnica per la ridenominazione delle colonne è stato fornita nella sezione precedente,
+vediamo come i dataset si presentano prima e dopo l'applicazione di essa.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=2.5cm]{dataset_prima_rinomina.png}
+    \caption{Dataset prima della ridenominazione delle colonne.}
+    \label{fig:ds_prima_rinomina}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,keepaspectratio]{dataset_dopo_rinomina.png}
+    \caption{Dataset dopo la ridenominazione delle colonne.}
+    \label{fig:ds_dopo_rinomina}
+\end{figure}
+
+Come possiamo notare dalle figure~\ref*{fig:ds_prima_rinomina} e~\ref*{fig:ds_dopo_rinomina}
+i nomi delle colonne dei dataset sono state ridenominate, esse ora rappresentano meglio
+la realtà ed il loro accesso su python facilitato in è possibile accedervi utilizzando
+il comando \texttt{dataset\_name.nome\_giunto} invece che \texttt{dataset\_name['nome\_giunto']}.
 
 
 
+\subsubsection{Gestione dei valori nulli}
+Nei dataset forniti erano presenti dei valori nulli causati
+dall'uscita del soggetto dall'obbiettivo e quindi l'impossibilità, da parte dell'algoritmo
+di machine learning, di ottenere una posizione per i giunti interessati.
+
+Essendo che l'obbiettivo finale del tirocinio non è quello di eseguire delle predizioni
+sulle serie temporali ma quello di inferire sui dati utilizzando le tecniche
+dell'analisi di serie temporali, i valori nulli sono stati semplicemente eliminati.
+In questa maniera consideriamo consecutivi dati che effettivamente non lo sarebbero
+ma questo non è stato un problema nelle succesive analisi poichè la maggior parte dei 
+valori nulli era presente nei momenti in cui il soggetto si girava per eseguire un'ulteriore
+camminata davanti all'obiettivo.
+
+Guardiamo ora una esempio di serie prima e dopo l'eliminazione dei valori nulli così da avere
+un'idea di come i dati si presentano.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=4.7cm]{piede_dx_nan.png}
+    \caption{Piede destro posizione $1$ con valori nulli.}
+    \label{fig:piede_dx_1_nan}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=4.7cm]{anca_dx_nan.png}
+    \caption{Anca destra con valori nulli.}
+    \label{fig:anca_dx_nan}
+\end{figure}
+
+Come possiamo notare dai grafici in figura~\ref*{fig:piede_dx_1_nan} e~\ref*{fig:anca_dx_nan}
+le serie contengono valori nulli nei punti in cui il soggetto esce dall'obiettivo girandosi
+per un'altra camminata davanti all'obiettivo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=4.7cm]{piede_dx_no_nan.png}
+    \caption{Piede destro posizione $1$ senza valori nulli.}
+    \label{fig:piede_dx_1_no_nan}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=4.7cm]{anca_dx_no_nan.png}
+    \caption{Anca destra senza valori nulli.}
+    \label{fig:anca_dx_no_nan}
+\end{figure}
+
+Guardando i grafici rappresentati in figura~\ref*{fig:piede_dx_1_no_nan} e~\ref*{fig:anca_dx_no_nan}
+possiamo notare come i valori nulli sono stati eliminati considerando così ogni camminata 
+davanti all'obiettivo continua.
 
 
-\subsection{Organizzazione Generale}
-\subsection{Prima analisi e possibili soluzioni}
-\subsection{Gestione dei dati}
-\subsection{Analisi con autocorrelazione}
+\subsubsection{Scelta dell'indice di tabella per ogni dataset}
+Un'osservazione che nasce spontanea dall'osservazione dei grafici in figura
+~\ref*{fig:piede_dx_1_nan},~\ref*{fig:anca_dx_nan},~\ref*{fig:piede_dx_1_no_nan}
+e~\ref*{fig:anca_dx_no_nan} e dalle tabelle in figura~\ref*{fig:ds_prima_rinomina}
+e~\ref*{fig:ds_dopo_rinomina} è che i dataset non sono indicizzati nel tempo utilizzando
+la classica indicizzazione come \texttt{anno/mese/giorno ora:minuti:secondi} ma sono indicizzati
+in base al frame di acquisizione quindi al numero di riga della tabella.
+Questo non è un problema dal punto di vista dell'analisi di ogni serie poichè noto il frame
+di acquisizione e la frequenza di campionamento si riuscirà facilmente a risalire ai secodni.
+
+Nel nostro caso, sapendo che i dati sono stati acquisiti con una frequenza di campionamento di 
+$30\mathsf{Hz}$, e presa una qualsiasi misurazione ad un certo frame risaliremo al secondo
+di tempo con la seguente formula
+\[ S_\texttt{frame} = \frac{\texttt{frame}}{30} \]
+dove $S_f$ sono i secondi trascorsi dal frame $0$ al frame $\texttt{frame}$ e $\texttt{frame}$ 
+è il numero del frame interessato.
+
+
+\subsection{Filtraggio dei dataset}
