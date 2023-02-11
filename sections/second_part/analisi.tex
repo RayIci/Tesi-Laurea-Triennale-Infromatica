@@ -181,7 +181,7 @@ ad individuarla nel grafico.
 Nella pratica se applichiamo una frequenza di taglio di $2\mathsf{Hz}$ il segnale rimane con del rumore
 e delle periodicità indesiderate, questo è duvuto al cruciale ruolo che svolge l'ordine del filtro.
 Dopo svariati tentativi si è riuscito ad ottenere un risultato soddisfacente utilizzando una frequenza
-di taglio di $1.21\mathsf{Hz}$ con un ordine di filtro $17$.
+di taglio di $1.2\mathsf{Hz}$ con un ordine di filtro $10$.
 
 Guardiamo ora il risultato finale, ottenuto dopo l'applicazione del filtro con i parametri descritti
 precedentemente, ed una serie non filtrata.
@@ -222,3 +222,12 @@ Dai grafici in figura~\ref{fig:piede_dx_1_sano_filt}
 e~\ref{fig:piede_dx_1_pat_filt} il filtro ha rimosso il rumore e la presenza dello stride
 si nota maggiormente.
 
+Un'ulteriore osservazione possibile sui grafici in figura~\ref{fig:piede_dx_1_sano_no_filt},~\ref{fig:piede_dx_1_pat_no_filt},~\ref{fig:piede_dx_1_sano_filt} 
+e~\ref{fig:piede_dx_1_pat_filt} è che si nota la presenza della periodicità
+relativa ad un'andata e ritorno del soggetto,
+essendo che sicuramente avviene più lentamente della periodicità di uno stride, essa
+risiede nelle frequenze ``molto basse''. Pensandola da un'ottica dell'analisi
+di serie temporali, è presente una stagionalità di periodo $T$ riferita ad una andata
+ed a un ritorno del soggetto. Essendo una periodicità non voluta si è deciso di eliminarla
+andando a filtrare con un filtro passa alte le frequenze ``bassissime'' o almeno,
+abbastanza basse da rimuovere solamente quella periodicità.
