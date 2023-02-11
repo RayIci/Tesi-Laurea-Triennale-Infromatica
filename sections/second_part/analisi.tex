@@ -230,4 +230,26 @@ risiede nelle frequenze ``molto basse''. Pensandola da un'ottica dell'analisi
 di serie temporali, è presente una stagionalità di periodo $T$ riferita ad una andata
 ed a un ritorno del soggetto. Essendo una periodicità non voluta si è deciso di eliminarla
 andando a filtrare con un filtro passa alte le frequenze ``bassissime'' o almeno,
-abbastanza basse da rimuovere solamente quella periodicità.
+abbastanza basse da rimuovere solamente quella periodicità. Dopo qualche tentativo
+è stato deciso di utilizzare un filtro passa alte con frequenza di taglio $0.5\mathsf{Hz}$
+(periodicità che si ripetono ogni $2\mathsf{secondi}$ e superiori) con un ordine di filtro di $10$.
+
+Vediamo ora i grafici delle due serie rappresentate in figura~\ref{fig:piede_dx_1_sano_filt} 
+e~\ref{fig:piede_dx_1_pat_filt} dopo l'ultima fase di filtraggio.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=4.7cm]{piede_dx_sano_filt2.png}
+    \caption{Piede destro posizione $1$ di un paziente sano dopo l'applicazione dell'ultima fase di filtraggio.}
+    \label{fig:piede_dx_1_sano_filt2}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=4.7cm]{piede_dx_pat_filt2.png}
+    \caption{Piede destro posizione $1$ di un paziente patologico dopo l'applicazione dell'ultima fase di filtraggio.}
+    \label{fig:piede_dx_1_pat_filt2}
+\end{figure}
+
+Come possiamo notare dai grafici in figura~\ref*{fig:piede_dx_1_sano_filt2} e~\ref*{fig:piede_dx_1_pat_filt2}
+la componente periodica di andata e ritorno è stata eliminata.
