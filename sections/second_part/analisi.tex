@@ -155,3 +155,19 @@ dove $S_f$ sono i secondi trascorsi dal frame $0$ al frame $\texttt{frame}$ e $\
 
 
 \subsection{Filtraggio dei dataset}
+Come si può notare dai grafici in figura~\ref*{fig:piede_dx_1_nan},~\ref*{fig:anca_dx_nan},~\ref*{fig:piede_dx_1_no_nan}
+e~\ref*{fig:anca_dx_no_nan} le serie dei dataset contengono molto rumore causato da una sbagliata 
+lettura della posizione, di ogni giunto, da parte dell'algoritmo di machine learning.
+
+Come spiegato nella precedente sottosezione sul filtraggio il rumore risiede principalemente nelle
+alte frequenze di un segnale.
+
+In linea teorica si è pensato che tutte le frequenze più alte di $2\mathsf{Hz}$ possano essere rumore,
+quindi in sostanza si andranno ad eliminare tutte le periodicità e movimenti periodici 
+che avvengono sotto $0.5 \mathsf{secondi}$. Una soluzione migliore sarebbe stata quella di analizzare
+ogni serie e, per ciascuna di esse, aplicare un filtro con una frequenza di taglio ottimale così da
+non eliminare informazioni importanti. Per lo scopo di questo tirocinio, come verrà spiegato in seguito,
+ci soffermeremo sull'analisi dei giunti relativi al piede e quindi una frequenza di taglio di $2\mathsf{Hz}$
+potrebbe essere sufficiente a non perdere nessuna informazione importante.
+Per fare un esempio pratico l'intervallo di tempo tra due successivi istanti di contatto con il
+terreno dello stesso piede, per un soggetto sano, avviene con una periodicità media di 
