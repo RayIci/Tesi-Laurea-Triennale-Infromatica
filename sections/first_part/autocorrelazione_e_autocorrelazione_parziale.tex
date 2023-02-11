@@ -202,3 +202,36 @@ def funzione_autocorrelazione(
 
 
 \subsubsection{Funzione di Autocorrelazione Parziale}
+L'autocorrelazione parziale, riassume la relazione tra 
+un'osservazione di una serie temporale e le osservazioni di fasi temporali precedenti,
+come la normale autocorrelazione con la diversità che le relazioni 
+delle osservazioni intermedie vengono rimosse. In sostanza, 
+le correlazioni indirette vengono eliminate lasciando visibile solamente
+l'effetto diretto~\cite{md:mediumacf_pacf}.
+
+Potreste, ad esempio, essere interessati alla relazione diretta tra i consumi 
+di oggi e quelli di un anno fa. Non vi importa nulla di ciò che accade nel mezzo.
+
+Il consumo dei 12 mesi precedenti ha un effetto sul consumo degli 11 mesi precedenti 
+e il ciclo continua fino al periodo più recente. Nelle stime di autocorrelazione parziale, 
+questi effetti indiretti vengono ignorati~\cite{ain:acf_pacf}.
+
+\paragraph{Calcolo della funzione di autocorrelazione parziale}
+La funzione di autocorrelazione parziale teorica di una serie temporale 
+stazionaria può essere calcolata utilizzando l'algoritmo di Durbin-Levinson:
+\[ \phi_{n,n} = 
+\frac
+{\rho(n) - \sum_{k = 1}^{n-1}  \phi_{n-1,k}\rho(n-k)}
+{1 - \sum_{k = 1}^{n-1} \phi_{n-1,k}\rho(k)} 
+\]
+    
+dove $\phi_{n,k} = \phi_{n-1,k} - \phi_{n,n}\phi_{n-1,n-k}$ per $1 \leq k \leq n-1$ and
+$\rho(n)$ è la funzione di autocorrelazione~\cite{wiki:pacf}.
+
+\paragraph{Quando è utile l'autocorrelazione parziale}
+La funzione di autocorrelazione parziale gioca un ruolo molto importante, nell'analisi
+di serie temporali, per l'identificazione dei lag ``importanti'' per un modello autoregressivo
+(AR). Essendo che lo scopo del tirocinio è analizzare 
+serie temporali senza eseguire nessuna predizione sui dati con modelli autoregressivi, verrà
+data un'iplementazione della formula presente sopra senza però scendere nei dettagli. 
+
