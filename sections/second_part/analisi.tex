@@ -164,10 +164,61 @@ alte frequenze di un segnale.
 
 In linea teorica si è pensato che tutte le frequenze più alte di $2\mathsf{Hz}$ possano essere rumore,
 quindi in sostanza si andranno ad eliminare tutte le periodicità e movimenti periodici 
-che avvengono sotto $0.5 \mathsf{secondi}$. Una soluzione migliore sarebbe stata quella di analizzare
+che avvengono sotto $0.5 \mathsf{secondi}$. 
+
+Una soluzione migliore sarebbe stata quella di analizzare
 ogni serie e, per ciascuna di esse, aplicare un filtro con una frequenza di taglio ottimale così da
 non eliminare informazioni importanti. Per lo scopo di questo tirocinio, come verrà spiegato in seguito,
 ci soffermeremo sull'analisi dei giunti relativi al piede e quindi una frequenza di taglio di $2\mathsf{Hz}$
 potrebbe essere sufficiente a non perdere nessuna informazione importante.
-Per fare un esempio pratico l'intervallo di tempo tra due successivi istanti di contatto con il
-terreno dello stesso piede, per un soggetto sano, avviene con una periodicità media di 
+
+
+Per fare un esempio pratico supponiamo che l'intervallo di tempo tra due successivi istanti di contatto con il
+terreno dello stesso piede (stride), per un soggetto sano, avviene in media ogni $0.8\mathsf{secondi}$,
+allora il la frequenza di taglio scelta non elimina la periodicità interessata e riusciremo 
+ad individuarla nel grafico.
+
+Nella pratica se applichiamo una frequenza di taglio di $2\mathsf{Hz}$ il segnale rimane con del rumore
+e delle periodicità indesiderate, questo è duvuto al cruciale ruolo che svolge l'ordine del filtro.
+Dopo svariati tentativi si è riuscito ad ottenere un risultato soddisfacente utilizzando una frequenza
+di taglio di $1.21\mathsf{Hz}$ con un ordine di filtro $17$.
+
+Guardiamo ora il risultato finale, ottenuto dopo l'applicazione del filtro con i parametri descritti
+precedentemente, ed una serie non filtrata.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=4.7cm]{piede_dx_sano_no_filt.png}
+    \caption{Piede destro posizione $1$ di un paziente sano prima dell'applicazione del filtro.}
+    \label{fig:piede_dx_1_sano_no_filt}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=4.7cm]{piede_dx_pat_no_filt.png}
+    \caption{Piede destro posizione $1$ di un paziente patologico prima dell'applicazione del filtro.}
+    \label{fig:piede_dx_1_pat_no_filt}
+\end{figure}
+
+Come possiamo notare dai grafici in figura~\ref{fig:piede_dx_1_sano_no_filt} 
+e~\ref{fig:piede_dx_1_pat_no_filt} le serie non sono filtrate e contengono molto rumore.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=4.7cm]{piede_dx_sano_filt.png}
+    \caption{Piede destro posizione $1$ di un paziente sano dopo l'applicazione del filtro.}
+    \label{fig:piede_dx_1_sano_filt}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=4.7cm]{piede_dx_pat_filt.png}
+    \caption{Piede destro posizione $1$ di un paziente patologico dopo l'applicazione del filtro.}
+    \label{fig:piede_dx_1_pat_filt}
+\end{figure}
+
+Dai grafici in figura~\ref{fig:piede_dx_1_sano_filt} 
+e~\ref{fig:piede_dx_1_pat_filt} il filtro ha rimosso il rumore e la presenza dello stride
+si nota maggiormente.
+
