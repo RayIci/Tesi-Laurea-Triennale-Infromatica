@@ -1,18 +1,15 @@
 \section{Gestione dei dataset forniti}
-Il problema affrontato durante questa fase del tirocinio, di durata 1 mese, prevedeva di analizzare
-più dataset, relativi a soggetti sani e patologici, utilizzando le tecniche
-studiate durante la prima fase del tirocinio, apliamente descritte nella sezione
-precedente.
+Da questa sezione in poi il tirocinio entrò nella sua seconda fase di durata 1 mese e le succesive
+sezioni e sottosezioni, inclusa la medesima, saranno in ordine cronologico di lavoro.
 
-In questo capitolo varrà presentato il problema affrontato, l'analisi di esso, le possibili soluzioni
-ed infine i risultati ottenuti.
-
-\subsection{Obbiettivo}
-Per ragioni di tempo e di semplicità
+L'obbiettivo di questa sezione è spiegare le scelte applicative che sono state attuate
+per l'elaborazione dei dataset e descriverne il loro contenuto, per 
+riuscirne a capire le analisi, le soluzioni ed i risultati ottenuti nelle seguenti sezioni. 
 
 
-\subsection{Suddivisione e gestione dei dataset}
-\subsubsection{Descrizione dei dataset}
+
+
+\subsection{Descrizione dei dataset}
 Durante il tirocinio sono stati forniti più dataset.
 Ogni dataset era relativo ad un paziente, sano o patologico, con una specifica camminata,
 più nel dettaglio i dataset erano relativi a camminate normali, sulle punte o tacco punta.
@@ -57,7 +54,7 @@ una misura della posizione sull'asse delle ordinate ed una misura di likelihood 
 tra $0$ ed $1$ che esprime quanto siamo sicuri di aver trovato il giunto nella posizione giusta
 (questa misurazione è stata ignorata).
 
-\subsubsection{Rinomina delle colonne dei dataset}
+\subsection{Rinomina delle colonne dei dataset}
 I dataset sono stati forniti sprovvisti di una rappresentazione significativa per ogni colonna
 quindi, come prima operazione, sono state ridenominate tutte le colonne.
 
@@ -86,7 +83,7 @@ il comando \texttt{dataset\_name.nome\_giunto} invece che \texttt{dataset\_name[
 
 
 
-\subsubsection{Gestione dei valori nulli}
+\subsection{Gestione dei valori nulli}
 Nei dataset forniti erano presenti dei valori nulli causati
 dall'uscita del soggetto dall'obbiettivo e quindi l'impossibilità, da parte dell'algoritmo
 di machine learning, di ottenere una posizione per i giunti interessati.
@@ -139,7 +136,7 @@ possiamo notare come i valori nulli sono stati eliminati considerando così ogni
 davanti all'obiettivo continua.
 
 
-\subsubsection{Scelta dell'indice di tabella per ogni dataset}
+\subsection{Scelta dell'indice di tabella per ogni dataset}
 Un'osservazione che nasce spontanea dall'osservazione dei grafici in figura
 ~\ref*{fig:piede_dx_1_nan},~\ref*{fig:anca_dx_nan},~\ref*{fig:piede_dx_1_no_nan}
 e~\ref*{fig:anca_dx_no_nan} e dalle tabelle in figura~\ref*{fig:ds_prima_rinomina}
