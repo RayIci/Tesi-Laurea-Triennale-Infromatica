@@ -28,3 +28,85 @@ In caso positivo, quindi di una possibile soluzione al problema posto, i risulta
     \item Impossibilità da parte del metodo sviluppato di rilevare un passo.
 \end{itemize}
 
+
+\subsection{Prima soluzione}
+Come prima soluzione al problema si è pensato di utilizzare la funzione di autocorrelazione controllando
+se quest'ultima sia in grado di riconoscere qualche pattern o una sorta di correlazione tra i dati non
+visibile direttamente.
+
+Mediante l'ausilio del test di Dickey-Fuller ed il calcolo della prima differenza è stato possibile
+rendere le serie stazionarie, preparandole così alla successiva analisi di autocorrelazione.
+\\
+\paragraph*{Snippet} (\textit{Prima differenza})
+\begin{minted}{python3}
+    def compute_first_diff(series: list | np.ndarray):
+        """ Calcola la prima differenza
+        """
+        
+        if not isinstance(series, np.ndarray):
+            series = np.array(series)
+
+        return series[1:] - series[:len(series)-1]
+\end{minted}
+
+\paragraph*{Snippet} (\textit{Metodo per rendere la serie stazionaria})
+\begin{minted}{python3}
+    def make_stationary(series, max_steps = 30):
+        """ Rende la serie stazionaria mediante il calcolo
+            della prima differenza
+        """
+        step = 0   # numero di step
+        s_copy = series.copy()  # copia della serie
+        
+        # fino a quando il test ritornca che la serie
+        # non è stazionaria oppure sono stati superati
+        # il massimo di step
+        while(sts.adfuller(series)[1] > 0.05 
+            and step < max_steps):
+            
+            # calcola la prima differenza
+            serie = compute_first_diff(series)
+            step += 1
+
+        # se max_step è superato, non si è riusciti
+        # a rendere la serie stazionaria
+        if step > 30:
+            series = s_copy
+
+        return series
+\end{minted}
+
+\begin{sloppypar}
+Avendo reso ogni serie stazionaria guardiamo alcuni dei grafici relativi all'autocorrelazione
+di serie appartenenti a dataset dei soggetti $6$ ed $8$.
+\end{sloppypar}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,keepaspectratio]{P006_x_piede_dx_1_acf.png}
+    \caption{Soggetto $6$ autocorrelazione x piede destro posizione 1.}
+    \label{fig:P006_x_piede_dx_1_acf}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,keepaspectratio]{P008_x_piede_dx_1_acf.png}
+    \caption{Soggetto $8$ autocorrelazione x piede destro posizione 1.}
+    \label{fig:P008_x_piede_dx_1_acf}
+\end{figure}
+
+Da come si può notare dai grafici in figura~\ref{fig:P006_x_piede_dx_1_acf} e~\ref{fig:P008_x_piede_dx_1_acf}
+l'autocorrelazione sembra riconoscere la durata di un passo in corrispondenza dei massimi locali.
+
+Utilizzando la funzione \texttt{argrelextrema} del modulo \texttt{statsmodels.tsa.stattools}
+è stato possibile recuperare gli argomenti (indici della lista) dei massimi locali.
+Per esempio se prendiamo in considerazione il grafico~\ref{fig:P006_x_piede_dx_1_acf} gli argomenti
+dei massimi locali sono
+\[ [46, 98, 158, 202, 242, 287, 333, 378, 433, 486, 533, 580, 625, 666] \]
+dove ogni argomento fa riferimento all'istante di tempo $t$, quindi al frame, in cui uno stride si ripete.
+
+Questo ovviamente succede in linea teorica, non sempre è detto che il grafico dell'autocorrelazione
+riesca ad ottenere con precisione quest'informazione, soprattutto se i dati non sono filtrati correttamente.
+
+Continuado con l'implementazione del metodo, calcolando la distanza tra un argomento e l'altro troveremo
+la durata di quel determinato passo.
