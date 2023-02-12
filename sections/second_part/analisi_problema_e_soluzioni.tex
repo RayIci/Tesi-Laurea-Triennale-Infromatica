@@ -30,10 +30,17 @@ In caso positivo, quindi di una possibile soluzione al problema posto, i risulta
 
 
 \subsection{Prima soluzione}
-Come prima soluzione al problema si è pensato di utilizzare la funzione di autocorrelazione controllando
-se quest'ultima sia in grado di riconoscere qualche pattern o una sorta di correlazione tra i dati non
+In questa sezione verrà mostrata la prima soluzione al problema posto, nello specifico verrà
+spiegata in breve l'idea generale, l'implementazione di alcuni dei metodi utilizzati, l'analisi dei
+risultati, l'analisi della complessità ed infine le conclusioni.
+
+
+\subsubsection{Idea generale}
+L'idea generale, fulcro di questa soluzione, ruota intorno all'analisi della funzione di autocorrelazione.
+Quest'ultima viene utilizzata per riconoscere pattern o una sorta di correlazione tra i dati non
 visibile direttamente.
 
+\subsubsection{Implementazione}
 Mediante l'ausilio del test di Dickey-Fuller ed il calcolo della prima differenza è stato possibile
 rendere le serie stazionarie, preparandole così alla successiva analisi di autocorrelazione.
 \\
@@ -97,16 +104,44 @@ di serie appartenenti a dataset dei soggetti $6$ ed $8$.
 
 Da come si può notare dai grafici in figura~\ref{fig:P006_x_piede_dx_1_acf} e~\ref{fig:P008_x_piede_dx_1_acf}
 l'autocorrelazione sembra riconoscere la durata di un passo in corrispondenza dei massimi locali.
-
+\begin{sloppypar}
 Utilizzando la funzione \texttt{argrelextrema} del modulo \texttt{statsmodels.tsa.stattools}
-è stato possibile recuperare gli argomenti (indici della lista) dei massimi locali.
+all'output della funzione di autocorrelazione è stato possibile recuperare gli argomenti (indici della lista) dei massimi locali.
 Per esempio se prendiamo in considerazione il grafico~\ref{fig:P006_x_piede_dx_1_acf} gli argomenti
 dei massimi locali sono
-\[ [46, 98, 158, 202, 242, 287, 333, 378, 433, 486, 533, 580, 625, 666] \]
+\end{sloppypar}
+\[ [45, 95, 152, 197, 245, 297, 347, 395, 454, 504, 549, 592, 636, 678] \]
 dove ogni argomento fa riferimento all'istante di tempo $t$, quindi al frame, in cui uno stride si ripete.
 
 Questo ovviamente succede in linea teorica, non sempre è detto che il grafico dell'autocorrelazione
 riesca ad ottenere con precisione quest'informazione, soprattutto se i dati non sono filtrati correttamente.
 
 Continuado con l'implementazione del metodo, calcolando la distanza tra un argomento e l'altro troveremo
-la durata di quel determinato passo.
+la durata di quel determinato passo. Prendendo sempre in considerazione la lista di agromenti sopra
+e calcolandone la prima differenza otterremo
+\[[50, 57, 45, 48, 52, 50, 48, 59, 50, 45, 43, 44, 42]\]
+dove ogni elemento rappresenta la durata di un singolo stride.
+
+Se calcoliamo la media otterremo la durata media di uno stride, che per la lista sopra sarà di 
+$48.69\texttt{frame}$ cioè $1.623\texttt{secondi}$.
+
+Questa serie di metodi è stata successivamente applicata ad ogni dataset ottenendo così la durata
+media di uno stride per ogni posizione del piede destro e sinistro. Per fare ciò è stato creato
+un ``mini'' programma che esegue automaticamente queste istruzioni ad ogni serie.
+
+\subsubsection{Analisi dei risultati}
+Analizzando i risultati soggetto per soggetto con camminata normale si è trovato che
+i soggetti patologici hanno in media una durata di stride più elevata
+
+\subsubsection{Analisi di complessità}
+\subsubsection{Conclusioni}
+
+
+
+\subsection{Seconda Soluzione}
+
+\subsubsection{Idea generale}
+\subsubsection{Implementazione}
+\subsubsection{Analisi dei risultati}
+\subsubsection{Analisi di complessità}
+\subsubsection{Conclusioni}
