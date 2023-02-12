@@ -125,17 +125,78 @@ dove ogni elemento rappresenta la durata di un singolo stride.
 Se calcoliamo la media otterremo la durata media di uno stride, che per la lista sopra sarà di 
 $48.69\texttt{frame}$ cioè $1.623\texttt{secondi}$.
 
+
+\paragraph{Snippet} (\textit{Metodo per il calcolo dello stride})
+\begin{minted}{python3}
+    def stride(serie: list | np.ndarray):
+        """ Calcola la durata di uno stride
+            assumendo che la serie sia stazionaria    
+        """
+
+        # redi la serie un array numpy
+        if not isinstance(serie, np.ndarray):
+            serie = np.array(serie)
+        
+        # funzione di autocorrelazione
+        acf = funzione_autocorrelazione(serie)
+
+        # prende gli argomenti massimi locali della acf
+        arg_max_locali = argrelextrema(acf, np.greater)[0]
+
+        # differenza tra gli argomenti massimi locali
+        arg_max_locali_diff = compute_first_diff(arg_max_locali)
+
+        # calcola durata media di uno stride
+        media_stride = arg_max_locali_diff.mean()
+
+        if not isinstance(serie, np.ndarray):
+            arg_max_locali_diff = arg_max_locali_diff.tolist()
+
+        return arg_max_locali_diff, media_stride
+
+\end{minted}
+
+
 Questa serie di metodi è stata successivamente applicata ad ogni dataset ottenendo così la durata
 media di uno stride per ogni posizione del piede destro e sinistro. Per fare ciò è stato creato
 un ``mini'' programma che esegue automaticamente queste istruzioni ad ogni serie.
 
-\subsubsection{Analisi dei risultati}
-Analizzando i risultati soggetto per soggetto con camminata normale si è trovato che
-i soggetti patologici hanno in media una durata di stride più elevata
-
 \subsubsection{Analisi di complessità}
-\subsubsection{Conclusioni}
+\begin{sloppypar}
+Assumendo che la serie fornita sia già stazionaria la complessità di questo algoritmo 
+deriva pricipalmente dalla complessità della funzione  \texttt{funzione\_autocorrelazione} e dalla complessità
+della funzione \texttt{shift} utilizzata dalla funzione di autocorrelazione.
+\end{sloppypar}
 
+Se consideriamo $n$ come la lunghezza della serie, la funzione di autocorrelazione cicla $n$ volte
+mentre la funzione di shift cicla $1,2,3,\dots,(n-2),(n-1),n$ volte quindi otterremo
+una complessità temporale $O(n\log{n})$.
+
+La complessità spaziale dell'algoritmo è $O(n)$.
+
+
+\subsubsection{Analisi dei risultati e Conclusioni}
+Per seplicità, i risultati verranno analizzati considerano un passo completo, cioè la somma degli stride
+del piede destro e sinistro. Per fare chiarezza mostriamo un'immagine.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth,keepaspectratio]{passo_completo.png}
+    \caption{Camminata di un soggetto~\cite{cf:passo_completo}.}
+    \label{fig:passo_completo}
+\end{figure}
+Considerando la figura~\ref*{fig:passo_completo} stiamo valutando il periodo (durata) che parte dalla prima striscia
+verde fino all'ultima striscia verde, quindi dall'inizio di una fase iniziale di doppio appoggio fino all'inzio
+di un'altra fase iniziale di doppio appoggio.
+
+\begin{sloppypar}
+Detto ciò, compariamo ora la durata media dei passi completi dei soggetti sani e patologici. 
+
+Si è trovato che la durata media di un passo completo con camminata normale è di rispettivamente $68,84 \ \texttt{frame}$
+($2,294 \ \texttt{secondi}$) per i soggetti sani e di 
+$81,71 \ \texttt{frame}$ ($2,723 \ \texttt{secondi}$) per i soggetti patologici.
+I soggetti patologici con camminata normale hanno quindi una durata di passo completo maggiore del 
+$19,84\%$ rispetto alla durata di un passo completo con camminata normale dei soggetti sani.
+\end{sloppypar}
 
 
 \subsection{Seconda Soluzione}
