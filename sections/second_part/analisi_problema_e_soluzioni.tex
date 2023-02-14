@@ -215,10 +215,155 @@ poichè la funzione di autocorrelazione potrebbe rilevare pattern e correlazioni
 aspettate ed anche perchè questa tecnica è stata applicata a seire filtrate in un certo modo.
 
 
+
 \subsection{Seconda Soluzione}
+In questa sezione verrà mostrata la seconda soluzione al problema posto, nello
+specifico verrà spiegata in breve l’idea generale, l’implementazione di alcune parti relative all'algoritmo, 
+l’analisi dei risultati, l’analisi della complessità ed infine
+le conclusioni.
 
 \subsubsection{Idea generale}
+In questa soluzione al problema si è pensato di considerare la scoposizione delle serie nelle 
+loro componenti quali trend, stagionalità e residui. Nello specifico l'idea è nata
+pensado che possiamo considerare ad un passo (stride) di un soggetto come ad un evento periodico
+che si ripete più o meno in ugual maniera nel tempo ad uno specifico periodo. Considerando quindi
+la scoposizione nelle tre compnenti di una serie, la stagionaità ad un determinato periodo potrebbe
+rappresentare l'informazione che stiamo cercando di ottenere. Questo avviene solamente il linea teorica
+in quanto non è detto che il passo di un soggetto avvenga sempre ad intervalli precisi ma l'idea è che
+ad un certo periodo la stagionalità raccolga la maggior parte dell'informazione cercata.
+
+Essendo che questo processo si può provare attuare solamente guardando il grafico della stagionalità
+si è pensato di automatizzarlo cercando un algoritmo che, data una serie temporare relativa ad un giunto,
+esso dia come risultato un periodo
+la cui stagionaità raccolga la maggior parte dell'informazione di un passo. Per fare ciò è stato 
+necessario comparare due serie, o meglio detto, è stato necessario comparare la serie relativa 
+ad un giunto divisa a metà considerando le due metà come serie separate. Successivamente
+si è calcolata la stagionalità su più periodi per entrambe le serie. In linea teorica i periodi con
+stagionalità simili sarebbero dovute essere i pattern che occorrono in entrambe le serie,
+mentre le stagionalità ``diverse'' sarebbero dovute essere pattern che non rientrano 
+in entrambe probabilmente dovuto ad altre motivazioni quali, ad esempio, del rumore ancora presente.
+
+
+
+
+
 \subsubsection{Implementazione}
+Per prima cosa è necessario dividere una serie relativa ad un giunto di un soggetto in due e decidere
+su quali periodi calcolare la stagionalità.
+
+Successivamente per ogni periodo si è calcolata la stagionalità delle due parti
+calcolandone la differenza quindi l'errore tra le due stagionalità. Per calcolare la stagionalità
+è stata utilizzata la funzione \texttt{seasonal\_decompose} del modulo \texttt{statsmodels.tsa.seasonal}
+relativo al pacchetto \texttt{statsmodels}, mentre per il calcolo dell'errore
+le due stagionalità sono state convertite nel dominio delle frequenze, utilizzando la trasformata
+di Fourier, e calcolata la differenza di ampiezza tra frequenze. L'algoritmo è stato 
+creato per poter accettare anche serie divise in più di due parti.
+
+Vediamo ora come è stata implementata la funzione che esegue il calcolo dell'errore.
+
+\paragraph*{Snippet} (\textit{Calcolo dell'errore tra stagionalità})
+\begin{minted}{python3}
+    def freq_error(season_1: list, season_2: list):
+
+        # prendi la lunghezza minima 
+        min_len = 0
+        if len(season_1) < len(season_2):
+            min_len = len(season_1)
+        else:
+            min_len = len(season_2)
+
+        # calcolo della trasformata di 
+        # Fourier tra stagionalità
+        fft_season_1 = sft.fft(season_1, min_len)
+        fft_season_2 = sft.fft(season_2, min_len)
+
+        # calcolo del magnitudo per ogni trasformata
+        fft_season_1_m = np.abs(fft_season_1) / len(season_1)
+        fft_season_2_m = np.abs(fft_season_2) / len(season_2)
+
+        # differenza tra frequenze
+        fft_diff = []
+        for idx in range(min_len//2):
+            fft_diff.append(fft_season_1_m[idx] - fft_season_2_m[idx])
+        
+        # calcolo dell'errore quadratico medio
+        return np.power(fft_diff, 2).mean() 
+\end{minted}
+
+
+Vediamo ora il metodo principale.
+\paragraph*{Snippet} (\textit{Metodo per la soluzione al problema (2)})
+\begin{minted}{python3}
+    def soluzione_2(seriesList, periods):
+        """ 
+        seriesList = 
+                lista che contiene la serie divisa in due parti
+                quindi due liste
+
+        periods = 
+                lista di interi, è la lista che
+                contiene i periodi su cui calcolare
+                la stagionalità
+        """
+        # per ogni periodo
+        errors = []
+        for j, period in enumerate(periods):
+
+            # non è possibile calcolare 
+            # la stagionalità per il periodo 0
+            if period == 0:
+                raise Exception('stagionalità non calcolabile \
+                    con periodo 0')
+
+            # calcola l'errore le parti della serie
+            aux_errors = []
+            for idx, series in enumerate(seriesList):
+
+                # stagionalità della prima parte
+                season = seasonal_decompose(
+                    series, period=period).seasonal
+
+                
+                for idx in range(idx+1, len(seriesList)):
+
+                    # stagionalità della seconda parte 
+                    # (e altre parti)
+                    aux_season = seasonal_decompose(
+                        seriesList[idx], period=period).seasonal
+                    
+                    # calcolo dell'errore tra stagionalità
+                    aux_errors.append(
+                        freq_error(season, aux_season)
+                    )
+            
+
+            errors.append(np.mean(aux_errors))
+
+        return np.min(errors), periods[np.argmin(errors)], errors
+\end{minted}
+
+Come possiamo vedere dall'implementazione come risultato otteniamo l'errore minimo, il periodo
+associato all'errore minimo e la lista contenente, per ogni periodo, l'errore associato.
+
+In una fase successiva è stata creata una funzione che permette di analizzare la lista relativa
+agli errori per ogni periodo creando dei grafici che indicano i periodi ``salienti''. 
+L'implementazione di quet'ultima non verrà data ma il concetto è che per periodi piccoli l'errore
+è sempre il minimo e crescente e, dopo un certo periodo, l'errore inizia ad aumentare drasticamente
+per poi diminuire successivamente dopo aver trovato una stagionalià nuovamente simile tra le due serie.
+Per capire meglio consideriamo la lista degli errori tra $1$ e $30$, in questo range l'errore è crescente
+per ogni periodo, dal periodo $31$ in poi l'errore aumenta drasticamente fino al periodo $80$ per poi diminuire
+nuovamente ed ad un certo punto riaumentare. Questo è dovuto appunto al fatto che quando le stagionalità non si
+``assomigliano'' l'errore sarà alto mentre per stagionalità simili l'errore è minimo o comunque molto basso.
+
+
 \subsubsection{Analisi dei risultati}
+Analizziamo ora qualche grafico cercando di capire meglio come rappresentare i risultati del metodo
+spiegato nella sezione precedente.
+
+
+
+
+
+
 \subsubsection{Analisi di complessità}
 \subsubsection{Conclusioni}
