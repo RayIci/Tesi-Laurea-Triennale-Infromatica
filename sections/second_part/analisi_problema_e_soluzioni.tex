@@ -356,13 +356,40 @@ nuovamente ed ad un certo punto riaumentare. Questo è dovuto appunto al fatto c
 ``assomigliano'' l'errore sarà alto mentre per stagionalità simili l'errore è minimo o comunque molto basso.
 
 
-\subsubsection{Analisi dei risultati}
+\subsubsection{Analisi dei risultati e Conclusioni}
 Analizziamo ora qualche grafico cercando di capire meglio come rappresentare i risultati del metodo
 spiegato nella sezione precedente.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth,keepaspectratio]{x_piede_sx_1_006.png}
+    \caption{Grafico degli errori per ogni periodo relativo al piede sinitro posizione 1 del soggetto patologico $6$.}
+    \label{fig:x_piede_sx_1_006_m2}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth,keepaspectratio]{x_piede_sx_1_008.png}
+    \caption{Grafico degli errori per ogni periodo relativo al piede sinitro posizione 1 del soggetto sano $8$.}
+    \label{fig:x_piede_sx_1_008_m2}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth,keepaspectratio]{x_piede_sx_1_021.png}
+    \caption{Grafico degli errori per ogni periodo relativo al piede sinitro posizione 1 del soggetto patologico $21$.}
+    \label{fig:x_piede_sx_1_021_m2}
+\end{figure}
 
+Nei grafici in figura~\ref*{fig:x_piede_sx_1_006_m2},~\ref*{fig:x_piede_sx_1_008_m2} e~\ref*{fig:x_piede_sx_1_021_m2}
+sono rappresentati gli errori sull'asse delle ordinate ed i periodi, a cui ogni errore è associato,
+sull'asse delle ascisse. Le linee rosse verticali rappresentano i punti salienti, essi sono calcolati mediante
+l'asulio di una funzione che utilizza la media e deviazione standard della differenza tra un errore 
+e quello successivo.
 
+Si è notato che in prossimità del periodo relativo ad un passo (stride) l'errore inizia ad alzarsi,
+in questo modo dovrebbe essere possibile calcolare la durata di un passo.
+Questo però succede solamente con alcune serie mentre per altre questo fenomeno non si manifesta o comunque
+si manifesta ma non si riesce a capire se è relativo ad un passo oppure ad altro.
 
-
+Questo succede perchè molte volte
 
 
 \subsubsection{Analisi di complessità}
