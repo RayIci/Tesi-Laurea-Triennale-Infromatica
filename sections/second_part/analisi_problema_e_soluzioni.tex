@@ -43,8 +43,10 @@ Quest'ultima viene utilizzata per riconoscere pattern o una sorta di correlazion
 visibile direttamente.
 
 \subsubsection{Implementazione}
-Mediante l'ausilio del test di Dickey-Fuller ed il calcolo della prima differenza è stato possibile
-rendere le serie stazionarie, preparandole così alla successiva analisi di autocorrelazione.
+Come primo step implementativo è stato necessario scrivere una funzione che rendesse ogni serie stazionaria 
+mediante l'ausilio del test di Dickey-Fuller ed il calcolo della prima differenza. Ovviamente
+per rendere una serie stazionaria esistono anche altri metodi diversi dalla prima differenza ma 
+si è deciso di utilizzarle quest'utlima per la sua semplicità.
 \\
 \paragraph*{Snippet} (\textit{Prima differenza})
 \begin{minted}{python3}
@@ -86,8 +88,9 @@ rendere le serie stazionarie, preparandole così alla successiva analisi di auto
 \end{minted}
 
 \begin{sloppypar}
-Avendo reso ogni serie stazionaria guardiamo alcuni dei grafici relativi all'autocorrelazione
-di serie appartenenti a dataset dei soggetti $6$ ed $8$.
+Dopo aver reso ogni serie stazionaria è stata applicata la funzione di autocorrelazione ad ognuna di
+esse, per capire meglio i risultati di questa operazione prendiamo in cosniderazione alcuni dei 
+grafici relativi all'autocorrelazione di serie appartenenti a dataset dei soggetti $6$ ed $12$.
 \end{sloppypar}
 
 \begin{figure}[H]
@@ -99,13 +102,104 @@ di serie appartenenti a dataset dei soggetti $6$ ed $8$.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth,keepaspectratio]{P008_x_piede_dx_1_acf.png}
-    \caption{Soggetto $8$ autocorrelazione x piede destro posizione 1.}
-    \label{fig:P008_x_piede_dx_1_acf}
+    \includegraphics[width=\linewidth,keepaspectratio]{P012_x_piede_dx_1_acf.png}
+    \caption{Soggetto $12$ autocorrelazione x piede destro posizione 1.}
+    \label{fig:P012_x_piede_dx_1_acf}
 \end{figure}
 
-Da come si può notare dai grafici in figura~\ref{fig:P006_x_piede_dx_1_acf} e~\ref{fig:P008_x_piede_dx_1_acf}
-l'autocorrelazione sembra riconoscere la durata di un passo in corrispondenza dei massimi locali.
+In figura~\ref{fig:P006_x_piede_dx_1_acf} e~\ref{fig:P012_x_piede_dx_1_acf} possiamo vedere
+la serie originale in comparazione con il proprio grafico di autocorrelazione. Per entrambi
+i grafici troviamo i periodi/frame sull'asse delle ascisse mentre sull'asse delle ordinate 
+troviamo l'ampiezza delle sinusoidi, per il grafico rappresentante i dati, ed il livello 
+di correlazione, per il grafico dell'autocorrelazione (quanto la serie dei dati è correlata
+con una sua versione spostata di $x$ frame/lag).
+
+Nella maggior parte dei casi possiamo inoltre notare come i punti di massimo locale del grafico
+dell'autocorrelazione corrispondono all'inizio di un passo, più in precisione corrispondono 
+alla ripetizione/pattern relativo ad un passo.
+
+Per capire meglio come interpretare il grafico dell'autocorrelazione vediamo come essa si comporta
+con una normale sinusoide (coseno e seno).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,keepaspectratio]{acf_cosine.png}
+    \caption{Grafico di un coseno con sue versioni shiftate ed autocorrelazione.}
+    \label{fig:acf_cosine}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,keepaspectratio]{acf_sine.png}
+    \caption{Grafico di un seno con sue versioni shiftate ed autocorrelazione.}
+    \label{fig:acf_sine}
+\end{figure}
+
+Come possiamo vedere dai grafici in figura~\ref{fig:acf_cosine} e~\ref{fig:acf_sine} 
+possiamo pensiamo al passo di una persona come un seno oppre ad un coseno. L'idea di utilizzare la
+funzione di autocorrelazione nasce dal fatto che quando iniziamo a shiftare la serie
+ed iniziamo a sovrapporre i passi, cioè quando le sinusoidi inizieranno ad allinearsi,
+la correlazione aumenterà trovando così il pattern di camminata e la durata di uno stride.
+
+\begin{sloppypar}
+L'effetto di tendenza a $0$, all'aumentare del numero di frame, nel grafico dell'autocorrelazione,
+è dovuto alla funzione di shift, quest'ultima per poter ``spostare'' la serie aggiunge degli $0$
+a destra o a sinistra dipendentemente dal verso in cui si vuole eseguire lo shift.
+\end{sloppypar}
+
+
+Per dare un esempio più pratico prendiamo un sottoinseieme della serie relativa al piede 
+destro posizione $1$ del soggetto sano $8$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth,keepaspectratio]{acf_subset_x_piede_dx_008.png}
+    \caption{Autocorrelazione con esempi di segnale shiftato.}
+    \label{fig:acf_subset_x_piede_dx_008}
+\end{figure}
+In figura~\ref{fig:acf_subset_x_piede_dx_008} possiamo travere diversi grafici relativi alla
+serie del paziente indicato sopra. Spieghiamo ora il loro significato:
+\begin{enumerate}
+    \item \textbf{Grafico in 1° posizione}: rappresenta la serie originale con una linea rossa (frame $300$)
+    che indica il frame finale del sottoinsieme considerato dai grafici sottostanti.
+    \item \textbf{Grafico in 2° posizione}:in blu viene rappresento il sottoinsieme preso in considerazione,
+    cioè dal frame $0$ al $300$, ed in arancione lo stesso sottoinsieme ma shiftato di $10$ frame/lag.
+    \item \textbf{Grafico in 3° posizione}: in blu viene rappresento il sottoinsieme preso in considerazione,
+    cioè dal frame $0$ al $300$, ed in verde lo stesso sottoinsieme ma shiftato di $20$ frame/lag.
+    \item \textbf{Grafico in 4° posizione}: in blu viene rappresento il sottoinsieme preso in considerazione,
+    cioè dal frame $0$ al $300$, ed in rosso lo stesso sottoinsieme ma shiftato di $41$ frame/lag.
+    \item \textbf{Grafico in 5° posizione}: in blu viene rappresento il sottoinsieme preso in considerazione,
+    cioè dal frame $0$ al $300$, ed in rosa lo stesso sottoinsieme ma shiftato di $144$ frame/lag.
+    \item \textbf{Grafico in 6° posizione}: la funzione di autocorrelazione calcolata su tutti i 
+    lag possibili con linee di colore arancione, verde, rosso e rosa in prossimità dei valori 
+    relativi alla correlazione tra la seire originale e la serie shiftata di $10$, $20$,
+    $41$ e $144$ lag (in sostanza sono i valori delle correlazioni relative ai grafici $2$, $3$, $4$ e $5$).
+\end{enumerate}
+
+Possiamo notare che il primo valore della funzione di autocorrelazione, cioè il valore della correlazione
+tra la seire originale e se stessa, è uguale ad $1$, di logica la massima correlazione possibile si può
+avere quando la serie è perfettamente allineata con se stessa.
+
+La correlazione tra la serie originale e la sua versione shiftata di $10$ lag invece ha valore
+quasi uguale a $0$, questo perchè se si guarda il grafico numero $2$ in figura, la serie 
+original e la sua versione shiftata in colore arancione si ``annullano'' avendo così correlazione
+nulla. In altre parole quando la correlazione è vicina a $0$ la serie con la sua versione shiftata
+sono ``molto'' diverse.
+
+La correlazione tra la serie originale e la sua versione shiftata di $20$ lag ha un'alta correlazione
+ma negativa, infatti se guardiamo il grafico numero $3$ possiamo vedere come la serie originale in blue
+e la sua versione shiftata in verde sono una ``l'opposto'' dell'altra trovando così un'alta correlazione
+ma negativa. Per ad immaginare una correlazione negativa possiamo pensare alla correlazione della serie
+originale con una sua versione ribaltata sull'asse delle ascisse (in sostanza se $y$ è la nostra serie consideriamo $-y$),
+il valore della correlazione a lag $0$ varrà $-1$.
+
+Infine se consideriamo la correlazione tra la serie originale e la sua versione shiftata di $41$ lag
+essa avrà un valore positivo ma ovviamente non $1$, se guardiamo il grafico numero $4$ possiamo notare
+come la serie originale in blu e la serie shiftata in rosso tendano ad allinearsi, avendo così
+come risultato una correlazione positiva.
+
+Capito ora come la funzione di autocorrelazione viene utilizzata per trovare la durata
+dei passi di un soggetto, continuiamo con l'implementazione della soluzione proposta.
+
 \begin{sloppypar}
 Utilizzando la funzione \texttt{argrelextrema} del modulo \texttt{statsmodels.tsa.stattools}
 all'output della funzione di autocorrelazione è stato possibile recuperare gli argomenti (indici della lista) dei massimi locali.
@@ -115,8 +209,10 @@ dei massimi locali sono
 \[ [45, 95, 152, 197, 245, 297, 347, 395, 454, 504, 549, 592, 636, 678] \]
 dove ogni argomento fa riferimento all'istante di tempo $t$, quindi al frame, in cui uno stride si ripete.
 
+\begin{sloppypar}
 Questo ovviamente succede in linea teorica, non sempre è detto che il grafico dell'autocorrelazione
 riesca ad ottenere con precisione quest'informazione, soprattutto se i dati non sono filtrati correttamente.
+\end{sloppypar}
 
 Continuado con l'implementazione del metodo, calcolando la distanza tra un argomento e l'altro troveremo
 la durata di quel determinato passo. Prendendo sempre in considerazione la lista di agromenti sopra
@@ -166,15 +262,14 @@ un ``mini'' programma che esegue automaticamente queste istruzioni ad ogni serie
 \subsubsection{Analisi di complessità}
 \begin{sloppypar}
 Assumendo che la serie fornita sia già stazionaria la complessità di questo algoritmo 
-deriva pricipalmente dalla complessità della funzione  \texttt{funzione\_autocorrelazione} e dalla complessità
-della funzione \texttt{shift} utilizzata dalla funzione di autocorrelazione.
+deriva pricipalmente dalla complessità della funzione \texttt{funzione\_autocorrelazione} e dalla complessità
+della funzione \texttt{singola\_autocorrelazione} utilizzata dalla funzione di autocorrelazione.
+
+Se consideriamo $n$ come la lunghezza della serie, 
+la funzione \texttt{autocorrelazione\_singola} ha complessità temporale e spaziale $O(n)$ quindi
+la funzione \texttt{funzione\_autocorrelazione} avrà complessità temporale $O(n^2)$ e complessità
+spaziale $O(n)$.
 \end{sloppypar}
-
-Se consideriamo $n$ come la lunghezza della serie, la funzione di autocorrelazione cicla $n$ volte
-mentre la funzione di shift cicla $1,2,3,\dots,(n-2),(n-1),n$ volte quindi otterremo
-una complessità temporale $O(n\log{n})$.
-
-La complessità spaziale dell'algoritmo è $O(n)$.
 
 
 \subsubsection{Analisi dei risultati e Conclusioni}
@@ -215,6 +310,8 @@ mediante l'ausilio di un metodo non totalmente sicuro. Il metodo utilizzato è s
 fine allo scopo del tirocinio quindi potrebbe giungere a rislutati non corretti 
 poichè la funzione di autocorrelazione potrebbe rilevare pattern e correlazioni diverse da quelle
 aspettate ed anche perchè questa tecnica è stata applicata a seire filtrate in un certo modo.
+
+\paragraph*{Problemi non totalmente risolti o ancora ingoniti}
 
 
 
