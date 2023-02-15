@@ -186,9 +186,9 @@ nulla. In altre parole quando la correlazione è vicina a $0$ la serie con la su
 sono ``molto'' diverse.
 
 La correlazione tra la serie originale e la sua versione shiftata di $20$ lag ha un'alta correlazione
-ma negativa, infatti se guardiamo il grafico numero $3$ possiamo vedere come la serie originale in blue
+ma negativa, infatti se guardiamo il grafico numero $3$ possiamo vedere come la serie originale in blu
 e la sua versione shiftata in verde sono una ``l'opposto'' dell'altra trovando così un'alta correlazione
-ma negativa. Per ad immaginare una correlazione negativa possiamo pensare alla correlazione della serie
+ma negativa. Per poter immaginare una correlazione negativa possiamo pensare alla correlazione della serie
 originale con una sua versione ribaltata sull'asse delle ascisse (in sostanza se $y$ è la nostra serie consideriamo $-y$),
 il valore della correlazione a lag $0$ varrà $-1$.
 
@@ -197,8 +197,8 @@ essa avrà un valore positivo ma ovviamente non $1$, se guardiamo il grafico num
 come la serie originale in blu e la serie shiftata in rosso tendano ad allinearsi, avendo così
 come risultato una correlazione positiva.
 
-Capito ora come la funzione di autocorrelazione viene utilizzata per trovare la durata
-dei passi di un soggetto, continuiamo con l'implementazione della soluzione proposta.
+Capito ora come poter interpretare la funzione di autocorrelazione relativa ad una serie 
+continuiamo con l'implementazione della soluzione proposta.
 
 \begin{sloppypar}
 Utilizzando la funzione \texttt{argrelextrema} del modulo \texttt{statsmodels.tsa.stattools}
@@ -364,6 +364,7 @@ in entrambe probabilmente dovuto ad altre motivazioni quali, ad esempio, del rum
 Per prima cosa è necessario dividere una serie relativa ad un giunto di un soggetto in due e decidere
 su quali periodi calcolare la stagionalità.
 
+\begin{sloppypar}
 Successivamente per ogni periodo si è calcolata la stagionalità delle due parti
 calcolandone la differenza quindi l'errore tra le due stagionalità. Per calcolare la stagionalità
 è stata utilizzata la funzione \texttt{seasonal\_decompose} del modulo \texttt{statsmodels.tsa.seasonal}
@@ -371,6 +372,7 @@ relativo al pacchetto \texttt{statsmodels}, mentre per il calcolo dell'errore
 le due stagionalità sono state convertite nel dominio delle frequenze, utilizzando la trasformata
 di Fourier, e calcolata la differenza di ampiezza tra frequenze. L'algoritmo è stato 
 creato per poter accettare anche serie divise in più di due parti.
+\end{sloppypar}
 
 Vediamo ora come è stata implementata la funzione che esegue il calcolo dell'errore.
 
