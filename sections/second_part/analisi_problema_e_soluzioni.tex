@@ -3,24 +3,26 @@ In questa sezione verrà descritto il problema affrontato, le soluzioni scelte e
 risultati ottenuti.
 
 \paragraph{Problema affrontato}
-Il problema affrontato chiedeva di trovare pattern, anomalie e/o inferire sui dataset forniti, 
+Il problema affrontato chiedeva di trovare pattern, anomalie e/o inferire sui dati forniti, 
 per ottenere, come risultato, informazioni su di essi mediante l'utilizzo di tecniche 
-dell'analisi di serie temporali.
+dell'analisi di serie temporali, e quindi successivamente capire se quest'ultime possano essere 
+utlizzate come tencniche ausiliarie per l'analisi a problemi di questa tipologia.
 
-Per questioni di tempo il problema è stato ridotto all'analisi dei giunti del piede, più in particolare,
-il tirocinio, è stato basato, sulla ricerca di uno o più metodi necessari a trovare la lunghezza di un passo
-(stride) con successiva analisi dei risultati.
+Per riuscire risolvere il problema posto e per questioni di tempo, il problema è stato 
+ridotto all'analisi dei soli giunti del piede, più in particolare,
+il tirocinio si è basato sulla ricerca di uno o più metodi utili a trovare la durata del passo
+(stride) di un soggetto con una successiva analisi dei risultati.
 
 
 
-\paragraph{Risultati aspettati}
+\paragraph{Risultati attesi}
 \begin{sloppypar}
-Come risultati aspettati è stata presa in considerazione l'eventualità della non riuscita dell'obbiettivo finale,
+Come risultato atteso è stata presa in considerazione l'eventualità della non riuscita dell'obbiettivo finale,
 quindi l'impossibilità di trovare, tramite le tecniche dell'analisi di serie temporali, una possibile soluzione
 al problema.
 \end{sloppypar}
 
-In caso positivo, quindi di una possibile soluzione al problema posto, i risultati aspettati potrebbero essere:
+In caso positivo, quindi di una possibile soluzione al problema posto, i risultati attesi potrebbero essere:
 \begin{itemize}
     \setlength\itemsep{-0.5em}
     \item Capacità da parte del metodo sviluppato di rilevare la durata del passo.
@@ -355,6 +357,14 @@ per ogni periodo, dal periodo $31$ in poi l'errore aumenta drasticamente fino al
 nuovamente ed ad un certo punto riaumentare. Questo è dovuto appunto al fatto che quando le stagionalità non si
 ``assomigliano'' l'errore sarà alto mentre per stagionalità simili l'errore è minimo o comunque molto basso.
 
+\subsubsection{Analisi di complessità}
+Consideriamo come $m$ il numero di sottoinsiemi, di ugual lunghezza, creati a partire da una serie 
+(negli esempi sopra abbiamo sempre considerato di dividere la serie in due parti),
+$n$ la lunghezza di un sottoinsieme, $S$ la complessità della 
+funzione \texttt{seasonal\_decompose} e tenuto conto che il periodo massimo su cui è possibile
+calcolare quest'ultima è di $(m/2)$, la complessità temporale della seconda soluzione è 
+$O( (n/2)m\log{(m)}Sn\log{(n)} )$ mentre la complessità spaziale sarà $O( n+2n+(n/2) )$ quindi $O(n)$.
+
 
 \subsubsection{Analisi dei risultati e Conclusioni}
 Analizziamo ora qualche grafico cercando di capire meglio come rappresentare i risultati del metodo
@@ -380,17 +390,43 @@ spiegato nella sezione precedente.
 
 Nei grafici in figura~\ref*{fig:x_piede_sx_1_006_m2},~\ref*{fig:x_piede_sx_1_008_m2} e~\ref*{fig:x_piede_sx_1_021_m2}
 sono rappresentati gli errori sull'asse delle ordinate ed i periodi, a cui ogni errore è associato,
-sull'asse delle ascisse. Le linee rosse verticali rappresentano i punti salienti, essi sono calcolati mediante
+sull'asse delle ascisse. Le linee rosse verticali rappresentano i punti salienti, calcolate mediante
 l'asulio di una funzione che utilizza la media e deviazione standard della differenza tra un errore 
 e quello successivo.
 
-Si è notato che in prossimità del periodo relativo ad un passo (stride) l'errore inizia ad alzarsi,
-in questo modo dovrebbe essere possibile calcolare la durata di un passo.
-Questo però succede solamente con alcune serie mentre per altre questo fenomeno non si manifesta o comunque
-si manifesta ma non si riesce a capire se è relativo ad un passo oppure ad altro.
+Controllando diversi grafici si è potuto notato che, per molte serie, in prossimità del periodo 
+relativo ad un passo (stride) l'errore inizia ad alzarsi, in questo modo dovrebbe essere possibile 
+calcolare la durata di un passo.
+Questo però non succede sempre, con alcune serie questo fenomeno non si manifesta o comunque
+si manifesta ma non in corrispondenza del periodo legato ad un passo, rendendo quindi impossibile
+reperire l'informazione necessaria.
 
-Questo succede perchè molte volte
+Questo potrebbe essere causato dal fatto che la funzione di seasonal decompose ``aggiusta'' la componente
+di residui per riuscire ad ottenere una periodicità nella componente di stagionalità.
+
+Tenendo a mente le considerazioni fatte fino questo punto possiamo quindi considerare i risultati ottenuti,
+e di conseguenza questa soluzione, come non validi, essendo che non si ha la sicurezza di poter
+ottenere risultati coerenti per la ricerca dell'informazione interessata.
 
 
-\subsubsection{Analisi di complessità}
-\subsubsection{Conclusioni}
+
+\subsection{Conclusioni Finali}
+Prendendo in considerazione la prima soluzione, spiegata nella sezione precedente, possiamo concludere
+che la funzione di autocorrelazione può essere utilizzata per la soluzione a problemi di questa tipologia,
+più in particolare essa può essere utilizzata per trovare pattern e/o caratteristiche presenti nei dati, 
+che dal grafico potrebbero non essere evidenti.
+
+La seconda soluzione proposta invece non è stata utile allo scopo di trovare un singolo passo 
+relativo ad un soggetto. Normalmente consideriamo azioni abituali, come ad esempio il passo,
+come pattern, di un determinato periodo, che si ripetono nel tempo quando invece nella realtà non 
+è così. 
+Tuttavia, l'algoritmo presentato nella seconda soluzione, potrebbe essere utilizzato 
+in altre applicazioni la cui necessità ricade sul trovare periodi in cui occorrono stagionalità simili 
+appartenenti a serie temporali diverse, oppure esso potrebbe essere preso come spunto implementativo per la creazione di un ulteriore 
+algoritmo.
+
+In conclusione, possiamo constatare che le tecniche utilizzate per l'analisi di serie temporali
+possono essere d'aiuto per una prima analisi non accurata del problema,
+non sostituendo però le tecniche tuttora utilizzate per analisi a problemi di questa tipologia.
+
+
