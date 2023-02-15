@@ -159,7 +159,7 @@ Come si può notare dai grafici in figura~\ref*{fig:piede_dx_1_nan},~\ref*{fig:a
 e~\ref*{fig:anca_dx_no_nan} le serie dei dataset contengono molto rumore causato da una sbagliata 
 lettura della posizione, di ogni giunto, da parte dell'algoritmo di machine learning.
 
-Come spiegato nella precedente sottosezione sul filtraggio il rumore risiede principalemente nelle
+Come spiegato nella precedente sottosezione sul filtraggio, il rumore risiede principalemente nelle
 alte frequenze di un segnale.
 
 In linea teorica si è pensato che tutte le frequenze più alte di $2\mathsf{Hz}$ possano essere rumore,
@@ -218,38 +218,57 @@ e~\ref{fig:piede_dx_1_pat_no_filt} le serie non sono filtrate e contengono molto
     \label{fig:piede_dx_1_pat_filt}
 \end{figure}
 
-Dai grafici in figura~\ref{fig:piede_dx_1_sano_filt} 
-e~\ref{fig:piede_dx_1_pat_filt} il filtro ha rimosso il rumore e la presenza dello stride
-si nota maggiormente.
+l'effetto sinusoidale del grafico rappresenta l'andamento del passo di un soggetto, 
+nello specifico se consideriamo il coefficiente angolare delle rette tangenti ai punti del 
+grafico, quindi la sua derivata prima, e consideriamo come inizio del passo il 
+primo punto in cui la derivata è uguale a $0$ la fine di un passo sarà il punto successivo 
+in cui la sua derivata prima è uguale a $0$. 
 
-Un'ulteriore osservazione possibile sui grafici in figura~\ref{fig:piede_dx_1_sano_no_filt},~\ref{fig:piede_dx_1_pat_no_filt},~\ref{fig:piede_dx_1_sano_filt} 
-e~\ref{fig:piede_dx_1_pat_filt} è che si nota la presenza della periodicità
+
+Dai grafici in figura~\ref{fig:piede_dx_1_sano_filt} 
+e~\ref{fig:piede_dx_1_pat_filt} possiamo notare come il filtro ha rimosso il rumore 
+presente dalle serie e come l'effetto sinusoidale rimasto rappresenta l'andamento del passo di un soggetto.
+nello specifico se consideriamo il coefficiente angolare delle rette tangenti ai punti del 
+grafico, quindi la sua derivata prima, e consideriamo come inizio del passo il 
+primo punto in cui la derivata è uguale a $0$ la fine di un passo sarà il successivo punto 
+in cui la sua derivata prima è uguale a $0$. 
+
+Detto ciò un'ulteriore osservazione possibile sui grafici in figura~\ref{fig:piede_dx_1_sano_filt} 
+e~\ref{fig:piede_dx_1_pat_filt} è che si può notare la presenza della periodicità
 relativa ad un'andata e ritorno del soggetto,
 essendo che sicuramente avviene più lentamente della periodicità di uno stride, essa
-risiede nelle frequenze ``molto basse''. Pensandola da un'ottica dell'analisi
-di serie temporali, è presente una stagionalità di periodo $T$ riferita ad una andata
-ed a un ritorno del soggetto. Essendo una periodicità non voluta si è deciso di eliminarla
-andando a filtrare con un filtro passa alte le frequenze ``bassissime'' o almeno,
-abbastanza basse da rimuovere solamente quella periodicità. Dopo qualche tentativo
+risiede nelle frequenze ``molto basse''. 
+Per cercare di isolare maggiornmente la caratteristica del passo
+si è deciso di eliminare questa periodicità
+andando a filtrare con un filtro passa alte le frequenze ``bassissime'' o almeno
+abbastanza basse da rimuovere solamente quella periodicità senza 
+incidere sulle componenti che caratterizzano lo stride di un soggetto. 
+Dopo qualche tentativo
 è stato deciso di utilizzare un filtro passa alte con frequenza di taglio $0.5\mathsf{Hz}$
 (periodicità che si ripetono ogni $2\mathsf{secondi}$ e superiori) con un ordine di filtro di $10$.
 
 Vediamo ora i grafici delle due serie rappresentate in figura~\ref{fig:piede_dx_1_sano_filt} 
-e~\ref{fig:piede_dx_1_pat_filt} dopo l'ultima fase di filtraggio.
+e~\ref{fig:piede_dx_1_pat_filt} a confronto prima e dopo l'ultima fase di filtraggio.
 
 \begin{figure}[H]
     \centering
+    \includegraphics[width=\linewidth,height=4.7cm]{piede_dx_sano_filt.png}
     \includegraphics[width=\linewidth,height=4.7cm]{piede_dx_sano_filt2.png}
-    \caption{Piede destro posizione $1$ di un soggetto sano dopo l'applicazione dell'ultima fase di filtraggio.}
+    \caption{Piede destro posizione $1$ di un soggetto sano prima e dopo l'applicazione dell'ultima fase di filtraggio.}
     \label{fig:piede_dx_1_sano_filt2}
 \end{figure}
-
 \begin{figure}[H]
     \centering
+    \includegraphics[width=\linewidth,height=4.7cm]{piede_dx_pat_filt.png}
     \includegraphics[width=\linewidth,height=4.7cm]{piede_dx_pat_filt2.png}
-    \caption{Piede destro posizione $1$ di un soggetto patologico dopo l'applicazione dell'ultima fase di filtraggio.}
+    \caption{Piede destro posizione $1$ di un soggetto patologico prima e dopo l'applicazione dell'ultima fase di filtraggio.}
     \label{fig:piede_dx_1_pat_filt2}
 \end{figure}
 
-Come possiamo notare dai grafici in figura~\ref*{fig:piede_dx_1_sano_filt2} e~\ref*{fig:piede_dx_1_pat_filt2}
-la componente periodica di andata e ritorno è stata eliminata.
+Come possiamo notare dai grafici in figura~\ref*{fig:piede_dx_1_sano_filt2} 
+e~\ref*{fig:piede_dx_1_pat_filt2} la componente periodica di andata e ritorno 
+è stata eliminata 
+e consideriamo il secondo grafico di ogni figura possiamo notare come i massimi locali 
+delle componenti sinusoidali rappresentino l'inizio di ogni passo del soggetto,
+quindi i frame che intercorrono tra un punto di masssimo locale e quello successivo rappresentano
+uno stride di un soggetto.
