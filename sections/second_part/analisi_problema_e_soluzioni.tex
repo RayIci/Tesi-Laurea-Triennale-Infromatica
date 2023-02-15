@@ -312,6 +312,20 @@ poichè la funzione di autocorrelazione potrebbe rilevare pattern e correlazioni
 aspettate ed anche perchè questa tecnica è stata applicata a seire filtrate in un certo modo.
 
 \paragraph*{Problemi non totalmente risolti o ancora ingoniti}
+Una incognita rimasta aperta dopo l'analisi dei grafici dell'autocorrelazione e delle serie originali
+è l'effetiva importanza in questa soluzione di rendere le serie stazionarie. 
+La funzione di test Dickey-Fuller per l'analisi della stazionarietà fornita dal 
+pacchetto \texttt{statsmodels} ha la possibilità
+di capire automaticamente il numero di lag su cui eseguire il test e, per come è stato implementata
+la soluzione, l'algoritmo rileva un numero di lag non sufficiente per ottenere un risultato 
+di test veritiero.
+
+Considerato il fatto che la funzione della soluzione che rende le serie stazionarie non 
+rileva propriamente quando una serie è stazionaria, e quindi tutte le analisi successive
+sono state eseguite su serie non propriamente stazionarie, i risultati ottenuti non sono
+si discostano molto dalla realtà. Questo potrebbe essere dovuto a come sono stati
+filtrati i dati in partenza, e quindi, per questa determinata applicazione, non è stato necessario 
+avere delle serie propriamente stazionarie.
 
 
 
