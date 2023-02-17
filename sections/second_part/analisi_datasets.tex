@@ -30,9 +30,9 @@ ci ha fornito i dataset elaborati.
 
 \begin{esempio}[Giuntura del naso]
     Se per esempio prendiamo la giuntura del naso relativa ad uno dei dataset, indifferentemente
-    dal fatto che esso sia relativo ad un soggetto sano o patologico, essa presenta nel dataset una serie
-    chiamata \texttt{x\_naso} e \texttt{y\_naso} che rappresentano rispettivamente 
-    la posizione $x$ ed $y$ ad ogni frame acquisito dal video.
+    dal fatto che esso sia relativo ad un soggetto sano o patologico, essa presenta nel dataset due serie
+    chiamate \texttt{x\_naso} e \texttt{y\_naso} che rappresentano rispettivamente 
+    la posizione $x$ ed $y$ ad ogni frame di acquisizione.
 \end{esempio}
 
 \subparagraph*{Frequenza di campionamento}
@@ -51,34 +51,34 @@ occhio sinistro, zigomo destro, zigomo sinistro, piede sinistro ($3$ posizioni),
 piede destro ($3$ posizioni).\\
 Per ognuno di questi giunti è presente una misura della posizione sull'asse delle ascisse, 
 una misura della posizione sull'asse delle ordinate ed una misura di likelihood cioè un numero
-tra $0$ ed $1$ che esprime quanto siamo sicuri di aver trovato il giunto nella posizione giusta
+tra $0$ ed $1$ che esprime quanto siamo sicuri di aver trovato il giunto nella posizione corretta
 (questa misurazione è stata ignorata).
 
 \subsection{Rinomina delle colonne dei dataset}
 I dataset sono stati forniti sprovvisti di una rappresentazione significativa per ogni colonna
-quindi, come prima operazione, sono state ridenominate tutte le colonne.
+quindi, come prima operazione, sono state rinominate tutte le colonne.
 
 Senza scendere troppo nei dettagli implementativi di come questa operazione è stata eseguita,
-poichè una tecnica per la ridenominazione delle colonne è stato fornita nella sezione precedente,
+poiché una tecnica per la rinomina delle colonne è stato fornita nella sezione precedente,
 vediamo come i dataset si presentano prima e dopo l'applicazione di essa.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth,height=2.5cm]{dataset_prima_rinomina.png}
-    \caption{Dataset prima della ridenominazione delle colonne.}
+    \caption{Dataset prima della rinomina delle colonne.}
     \label{fig:ds_prima_rinomina}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth,keepaspectratio]{dataset_dopo_rinomina.png}
-    \caption{Dataset dopo la ridenominazione delle colonne.}
+    \caption{Dataset dopo la rinomina delle colonne.}
     \label{fig:ds_dopo_rinomina}
 \end{figure}
 
 Come possiamo notare dalle figure~\ref*{fig:ds_prima_rinomina} e~\ref*{fig:ds_dopo_rinomina}
-i nomi delle colonne dei dataset sono state ridenominate, esse ora rappresentano meglio
-la realtà ed il loro accesso su python facilitato in è possibile accedervi utilizzando
+i nomi delle colonne dei dataset sono state rinominate, esse ora rappresentano meglio
+la realtà ed il loro accesso su python è facilitato, poiché è possibile accedervi utilizzando
 il comando \texttt{dataset\_name.nome\_giunto} invece che \texttt{dataset\_name['nome\_giunto']}.
 
 
