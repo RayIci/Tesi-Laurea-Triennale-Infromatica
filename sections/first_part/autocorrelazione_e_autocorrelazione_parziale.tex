@@ -1,15 +1,13 @@
 \subsection{Autocorrelazione ed Autocorrelazione parziale}
 In questa sezione verranno presentate le funzioni di autocorrelazione ed autocorrelazione
-parziale utilizzate nell'analisi di serie temporali per poter trovare pattern e la correlazione
-diretta o indiretta della serie con una sua versione spostata lungo l'asse temporale.
+parziale, utilizzate nell'analisi di serie temporali per poter trovare pattern e la correlazione,
+diretta o indiretta, della serie con una sua versione spostata lungo l'asse temporale.
 
-Nota che per molte applicazioni (come l'analisi di pattern) che utilizzano le funzioni
-di autocorrelazione ed autocorrelazione parziale, le serie temporali devono essere stazionarie.
 
 \subsubsection{Funzione di Autocorrelazione}
 L'autocorrelazione definisce il grado di dipendenza tra i valori assunti 
-da una funzione campionata nel suo dominio in ascissa. \\
-Se è dimostrata l'autocorrelazione tra due valori, al cambiare delle peculiarità 
+da una funzione campionata nel suo dominio in ascissa (nel nostro caso il tempo).
+Se è dimostrata, l'autocorrelazione tra due valori, al cambiare delle peculiarità 
 di uno di essi varierà anche l'altro.
 
 L'autocorrelazione è uno strumento matematico usato frequentemente nella teoria dei 
@@ -34,8 +32,11 @@ in funzione dell'intervallo di tempo che le separa~\cite{wiki:autcor_en}.
 
 \paragraph{Definizione matematica} 
 \subparagraph*{Caso continuo}
+\begin{sloppypar}
 Dato un segnale $f(t)$ continuo ed indicizzato nel tempo, l'autocorrelazione $R_{ff}(\tau)$
 è definita come la cross-correlazione di $f(t)$ con se stesso avente un ritardo di $\tau$
+\end{sloppypar}
+
 \[R_{ff}(\tau) = \int_{-\infty}^{\infty} f(t+\tau) \overline{f(t)}  \,dt =  \int_{-\infty}^{\infty} f(t) \overline{f(t-\tau)}  \,dt \]
 dove $\overline{f(t)}$ indica il complesso coniugato fi $f(t)$. 
 Nota come il parametro $t$ nell'integrale è una variabile fittizia ed è solo necessaria
@@ -229,11 +230,14 @@ dove $\phi_{n,k} = \phi_{n-1,k} - \phi_{n,n}\phi_{n-1,n-k}$ per $1 \leq k \leq n
 $\rho(n)$ è la funzione di autocorrelazione~\cite{wiki:pacf}.
 
 \paragraph{Quando è utile l'autocorrelazione parziale}
+\begin{sloppypar}
 La funzione di autocorrelazione parziale gioca un ruolo molto importante, nell'analisi
 di serie temporali, per l'identificazione dei lag ``importanti'' per un modello autoregressivo
 (AR). Essendo che lo scopo del tirocinio è analizzare 
 serie temporali senza eseguire nessuna predizione sui dati con modelli autoregressivi, non verrà
-data un'iplementazione della formula presente sopra.
+data un'implementazione della formula presente sopra.
+\end{sloppypar}
+
 
 \paragraph{Pacchetto per l'utilizzo}
 La funzione \texttt{pacf}, del modulo\\ \texttt{statsmodels.tsa.stattools}, e la funzione

@@ -8,19 +8,20 @@ In statistica, la moving average (media mobile), chiamata anche rolling mean,
 è un calcolo che consente di analizzare dei dati creando una serie di 
 medie di diversi sottoinsiemi dell'insieme dei dati.
 
-Data una serie di numeri e un sottoinsieme fisso spesso chiamato finestra (window), 
+Data una serie di numeri e un sottoinsieme fisso, spesso chiamato finestra (window), 
 il primo elemento della media mobile si ottiene prendendo la media del sottoinsieme 
 fisso iniziale della serie di numeri. 
 Poi il sottoinsieme finestra viene modificato ``spostandosi in avanti'', escludendo 
 il primo numero della serie e includendo il valore successivo nel sottoinsieme~\cite{wiki:roll_mean}.
 
-Da un punto di vista matematico se consideriamo $Y$ la serie originale e $\hat{Y}$ la sua 
-rolling mean serie, e definiamo $k$ dimensione della finestra, numero intero positivo, le
+Da un punto di vista matematico se consideriamo $Y$ la serie originale e $\hat{Y}$ la serie
+generata dopo l'applicazione della funzione di rolling mean, e definiamo $k$ dimensione 
+della finestra, numero intero positivo, le
 osservazioni per ogni punto della rolling mean sono definite da
 \[ \hat{y}_t = \frac{1}{k}\sum_{n = 1}^{k} y_{t-n}  \]
 
-con $\hat{y}_t$ e $y_t$ rispettivamente osservazioni della rolling mean serie e della 
-serie originale all'istante di tempo $t$.
+con $y_t$ e $\hat{y}_t$  rispettivamente osservazioni della serie originale ed osservazioni
+della serie dopo l'applicazione della funzione di rolling mean, all'istante di tempo $t$.
 
 \paragraph*{Snippet}
 \begin{minted}{python3}
@@ -31,7 +32,7 @@ serie originale all'istante di tempo $t$.
             raise Exception('la finestra deve essere un \
                     numero intero > 0')
 
-        # nuva rolling serie
+        # serie rolling mean
         rolling_serie: list = []
 
         # calcolo della rolling mean
@@ -48,9 +49,9 @@ serie originale all'istante di tempo $t$.
 \end{minted}
 
 \begin{esempio}[Diversi valori per la finestra]
-    Consideriamo come esempio la serie che descrive la media giornaliera delle temperature
-    nella città di Benjing. Se applichiamo la funzione di rolling mean con diversi
-    valori per la finestra, otterremmo dei grafici come quelli mostrati in figura~\ref*{fig:rolling_mean_conf}.
+    Consideriamo come esempio la serie che descrive la temperatura giornaliera media
+    nella città di Beijing. Se applichiamo la funzione di rolling mean con diversi
+    valori per la finestra, otterremmo dei grafici come quelli mostrati in figura~\ref{fig:rolling_mean_conf}.
     
     \begin{figure}[H]
         \centering
@@ -80,7 +81,7 @@ della exponential smoothing serie è inizializzata con il primo valore della ser
 allora le osservazioni successive per ogni punto della exponential smoothing serie
 sono definite come
 \[ \hat{y}_t = \alpha y_t + (1 - \alpha)\hat{y}_{t-1}  \]
-con $\alpha$ numero intero positivo devinito nell'intervallo $0 < \alpha < 1$,  $\hat{y}_t$
+con $\alpha$ numero intero positivo definito nell'intervallo $0 < \alpha < 1$,  $\hat{y}_t$
 e $y_t$ rispettivamente osservazioni della exponential smoothing serie e della serie originale
 all'istante di tempo $t$ definito in $t \in [1, \dots , N]$ con $N$ numero totale delle osservazioni
 della serie originale.
@@ -106,9 +107,9 @@ della serie originale.
 \end{minted}
 
 \begin{esempio}[Diversi valori per alpha]
-    Consideriamo come esempio la serie che descrive la media giornaliera delle temperature
-    nella città di Benjing. Se applichiamo la funzione di exponential smoothing per diversi
-    valori di alpha, otterremmo dei grafici come quelli mostrati in figura~\ref*{fig:exp_smoot}.
+    Consideriamo come esempio la serie che descrive la temperatura giornaliera media
+    nella città di Beijing. Se applichiamo la funzione di exponential smoothing per diversi
+    valori di alpha, otterremmo dei grafici come quelli mostrati in figura~\ref{fig:exp_smoot}.
     
     \begin{figure}[H]
         \centering
@@ -122,7 +123,7 @@ della serie originale.
 
 \subsubsection{Double Exponential}
 La tecnica di double exponential smoothing viene utilizzata nella previsione delle 
-serie temporali quando i dati hanno una tendenza lineare ma non un andamento stagionale~\cite{si:dexp_smot}.
+serie temporali quando i dati hanno una tendenza lineare (trend) ma non un andamento stagionale~\cite{si:dexp_smot}.
 Questo tipo di smoothing utilizza lo stesso parametro alpha ($\alpha$) della tecnica di exponential
 smoothing vista precedentemente più un ulteriore parametro beta ($\beta$) che regola l'ammontare
 della componente di trend.
@@ -149,22 +150,22 @@ $\hat{y}_t$, $y_t$ rispettivamente osservazioni all'istante di tempo $t$ della d
 exponential serie $\hat{Y}$ e della serie originale $Y$.
 
 \begin{esempio}[Diversi valori per alpha]
-    Consideriamo come esempio la serie che descrive la media giornaliera delle temperature
-    nella città di Benjing. Se applichiamo la funzione di double exponential smoothing per diversi
+    Consideriamo come esempio la serie che descrive la temperatura giornaliera media
+    nella città di Beijing. Se applichiamo la funzione di double exponential smoothing per diversi
     valori di alpha e beta, otterremmo dei grafici come quelli mostrati 
-    in figura~\ref*{fig:expdoub_smoot1} e~\ref*{fig:expdoub_smoot2}.
+    in figura~\ref{fig:expdoub_smoot1} e~\ref{fig:expdoub_smoot2}.
     
     \begin{figure}[H]
         \centering
         \includegraphics[width=\linewidth,keepaspectratio]{expdoub_smoth_conf1.png}
-        \caption{Funzione di double exponential smoothing applicata a diversi valori di alpha e beta.}
+        \caption{Funzione di double exponential smoothing applicata a diversi valori di alpha e beta (alpha costante).}
         \label{fig:expdoub_smoot1}
     \end{figure}
 
     \begin{figure}[H]
         \centering
         \includegraphics[width=\linewidth,keepaspectratio]{expdoub_smoth_conf2.png}
-        \caption{Funzione di double exponential smoothing applicata a diversi valori di alpha e beta.}
+        \caption{Funzione di double exponential smoothing applicata a diversi valori di alpha e beta (beta costante).}
         \label{fig:expdoub_smoot2}
     \end{figure}
 
