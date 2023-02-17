@@ -1,11 +1,11 @@
 \subsection{Componenti di una serie temporale}
 In questo sottocapitolo ci soffermeremo a spiegare le componenti principali
 che compongono una serie temporale per poterne analizzare l'andamento e/o
-eventuali pattern ricorrenti sull'intera serie.
+eventuali pattern ricorrenti.
 
 
 Molte volte è utile suddividere una serie temporale in più diverse componenti
-distinte per poter analizzare singolarmente il loro comportamento e
+distinte per poterne analizzare singolarmente il loro comportamento e quindi successivamente
 riuscire ad inferire sul generale andamento della serie. Possiamo quindi
 pensare ad una serie temporale come un insieme di 3 componenti principali:
 Trend (andamento/tendenza), Stagionalità e Residui (più comunemente detta Noise).
@@ -13,12 +13,14 @@ Trend (andamento/tendenza), Stagionalità e Residui (più comunemente detta Nois
 \subsubsection{Trend}
 La componente di trend è un pattern nei dati che mostra che mostra il 
 movimento (andamento) di una serie verso valori relativamente più alti o più bassi 
-in un lungo periodo di tempo. In altre parole, si osserva una tendenza quando 
+in un lungo periodo di tempo. In altre parole, il trend si osserva quando 
 la serie temporale presenta una pendenza crescente o decrescente. 
 La tendenza di solito si verifica per un certo periodo di tempo 
 e poi scompare, non si ripete. Ad esempio, una nuova canzone, 
 che diventa di tendenza per un po' di tempo e poi scompare. 
-Non c'è alcuna possibilità che torni in tendenza~\cite{gg:trend}.\\
+Non c'è alcuna possibilità che torni in tendenza~\cite{gg:trend}.
+
+
 Il trend potrebbe essere:
 \begin{itemize}
     \setlength\itemsep{-0.6em}
@@ -27,19 +29,26 @@ Il trend potrebbe essere:
     \item \textbf{Trend orizzontale o stazionario}: Se non si osserva alcun pattern, si parla di trend orizzontale o stazionario.
 \end{itemize}
 
-Nella pratica il trend viene calcolato utilizzando delle tecniche di smoothing come
-\textit{moving average} (questo argomento verrà successivamente trattato in una sezione dedicata)
-e quindi stimato.
+Se pensiamo al trend come ad una retta, essa sarà la retta che meglio approssima i dati. Se 
+la retta ha coefficiente angolare positivo allora essa mostrerà un andamento generale al rialzo,
+se ha coefficiente angolare negativo allora essa mostrerà un andamento generale al ribasso, mentre se
+avrà coefficiente angolare uguale a $0$ non si osserverà alcun pattern.
+Ovviamente nella realtà non sempre una retta basta ad avere una buona approssimazione dei dati, quindi
+esistono anche altri tipi di trend come il trend esponenziale.
+
+Nella pratica dell'analisi delle serie temporali in python il trend viene stimato mediante 
+l'utilizzo di una funzione chiamata \textit{moving average} (trattata in una sezione successiva).
 
 \begin{esempio} [esempio pratico di trend]
     Consideriamo come serie temporale una serie la cui per ogni osservazione abbiamo
-    la media giornaliera delle temperature nella città di Beijing a partire 
+    la temperatura media giornaliera nella città di Beijing a partire 
     dal $01/01/2013$ al $01/01/2017$.
 
     \begin{figure}[H]
         \centering
         \includegraphics[width=\linewidth,height=4.7cm]{media_giornaliera_temp.png}
-        \caption{Media giornaliera delle temperature nella città di Beijing.}
+        \caption{Grafico della temperatura media giornaliera nella città di Beijing.}
+        \label{fig:media_giornaliera_temp}
     \end{figure}
 
     Consideriamo ora un periodo di un anno ($365$ giorni) il trend avrà un grafico
@@ -48,15 +57,13 @@ e quindi stimato.
     \begin{figure}[H]
         \centering
         \includegraphics[width=\linewidth,height=4.7cm]{media_giornaliera_temp_trend.png}
-        \caption{Trend della media giornaliera delle temperature nella città di Beijing.}
+        \caption{Trend della serie in figura~\ref{fig:media_giornaliera_temp}.}
         \label{fig:media_giornaliera_temp_trend}
     \end{figure}
-    Per poter capire meglio il grafico in figura~\ref*{fig:media_giornaliera_temp_trend} 
-    pensiamo che oggi sia il $01/01/2014$ e volgiamo sapere, con periodo un anno,
-    il trend. Quello che facciamo è prendere i precedenti $365$ giorni e ne calcoliamo 
-    la media, se è positiva abbiamo un tred crescente, se negativa abbiamo un trend decrescente
-    mentre se è $0$ allora abbiamo un trend orizzontale. Se eseguiamo questo passaggio
-    per ogni giornata otteniamo il grafico in figura~\ref*{fig:media_giornaliera_temp_trend}.
+
+    Come possiamo vedere dal grafico in figura~\ref{fig:media_giornaliera_temp_trend} 
+    il trend viene stimato utilizzando la media dei precedenti $365$ giorni, ovviamente
+    la scelta del periodo su cui stimare il trend influisce direttamente sul grafico. 
 
 \end{esempio}
 
@@ -77,15 +84,16 @@ intervalli/periodi specifici nel tempo.
 
 \begin{esempio} [esempio pratico di stagionalità]
 
-    Se consideriamo come serie temporale, la stessa medesima serie utilizzata 
-    precedentemente nell'esempio sopra del trend, quindi una serie la cui 
-    ogni osservazione indica la media giornaliera delle temperature 
+    Se consideriamo come serie temporale la stessa serie utilizzata 
+    nell'esempio precedente del trend, quindi una serie la cui 
+    ogni osservazione indica la temperatura media giornaliera  
     nella città di Beijing a partire dal $01/01/2013$ al $01/01/2017$
 
     \begin{figure}[H]
         \centering
         \includegraphics[width=\linewidth,height=4.7cm]{media_giornaliera_temp.png}
-        \caption{Media giornaliera delle temperature nella città di Beijing.}
+        \caption{Grafico della temperatura media giornaliera nella città di Beijing.}
+        \label{fig:media_giornaliera_temp2}
     \end{figure}
 
     e consideriamo un periodo di un anno ($365$ giorni) la stagionalità avrà un grafico
@@ -94,8 +102,14 @@ intervalli/periodi specifici nel tempo.
     \begin{figure}[H]
         \centering
         \includegraphics[width=\linewidth,height=4.7cm]{media_giornaliera_temp_stagionalità.png}
-        \caption{Stagionalità della media giornaliera delle temperature nella città di Beijing.}
+        \caption{Stagionalità del grafico in figura~\ref{fig:media_giornaliera_temp2}.}
+        \label{fig:media_giornaliera_temp_stag}
     \end{figure}
+
+    Il grafico in figura~\ref{fig:media_giornaliera_temp_stag} rappresenta la stagionalità
+    della serie rappresentata in figura~\ref{fig:media_giornaliera_temp2}.
+    Se guardiamo con occhio attento il grafico della stagionalità, possiamo notare come
+    ad intervalli di un anno esso si ripeta, creando così il pattern stagionale.
 
 \end{esempio}
 
@@ -105,7 +119,7 @@ La componente di residui, o più comunemente detta noise, può essere considerat
 la parte restante tra il trend e la stagionalità, quindi una sorta di errore.
 
 Un metodo per poter capire meglio come rappresenta la componente di residui 
-è considerare, ad esempio, una serie temporale con tred orizzontale e nessun pattern
+è considerare, ad esempio, una serie temporale con trend orizzontale e nessun pattern
 stagionale, ed applicare la definizione di residui, quindi tutto quello che rimane
 tolto il trend e la stagionalità.
 
@@ -142,6 +156,7 @@ all'istante di tempo $t$.
     \centering
     \includegraphics[width=0.6\linewidth]{additive_decomposition.jpg}
     \caption{Decomposizione additiva (escluso residui). [ref imag~\cite{md:seas_dec_imags}]}
+    \label{fig:dec_serie_add}
 \end{figure}
 
 
@@ -157,15 +172,17 @@ all'istante di tempo $t$.
     \centering
     \includegraphics[width=0.6\linewidth]{multiplicative_decomposition.jpg}
     \caption{Decomposizione moltiplicativa (escluso residui). [ref imag~\cite{md:seas_dec_imags}]}
+    \label{fig:dec_serie_mul}
 \end{figure}
 
 \paragraph{Scelta della modalità di decomposizione}
-La sceltà della modalità di decomposizione di una serie temporale è importate poichè
+La scelta della modalità di decomposizione di una serie temporale è importate poiché
 la sua decomposizione potrebbe apparire insensata scelta la modalità sbagliata.
 Una decomposizione additiva è principalmente appropriata se il magnitudo della 
 stagionalità non varia con il livello della serie temporale mentre se, la variazione
 della componente di stagionalità, appare proporzionale al livello della serie una modalità
-moltiplicativa potrebbe essere più appropriata.
+moltiplicativa potrebbe essere più appropriata (per capire la seguente frase guarda le figure
+~\ref{fig:dec_serie_add} e~\ref{fig:dec_serie_mul}).
 
 
 \paragraph{Decomposizione in python}
@@ -184,10 +201,10 @@ Vediamo ora come poter decomporre una serie temporale utilizzando la funzione
     # import del pacchetto 
     from statsmodels.tsa.seasonal import seasonal_decompose
 
-    # periodo utlizzato per il calcolo di trend e stagionalità
+    # periodo utilizzato per il calcolo di trend e stagionalità
     periodo = 365 
 
-    # decomposizione della seire
+    # decomposizione della serie
     decomposition = seasonal_decompose(serie, period=periodo)
 
     trend   = decomposition.trend     # trend
