@@ -6,7 +6,7 @@ risultati ottenuti.
 Il problema affrontato chiedeva di trovare pattern, anomalie e/o inferire sui dati forniti, 
 per ottenere, come risultato, informazioni su di essi mediante l'utilizzo di tecniche 
 dell'analisi di serie temporali, e quindi successivamente capire se quest'ultime possano essere 
-utlizzate come tencniche ausiliarie per l'analisi a problemi di questa tipologia.
+utilizzate come tecniche ausiliarie per l'analisi a problemi di questa tipologia.
 
 Per riuscire risolvere il problema posto e per questioni di tempo, il problema è stato 
 ridotto all'analisi dei soli giunti del piede, più in particolare,
@@ -39,15 +39,15 @@ risultati, l'analisi della complessità ed infine le conclusioni.
 
 \subsubsection{Idea generale}
 L'idea generale, fulcro di questa soluzione, ruota intorno all'analisi della funzione di autocorrelazione.
-Quest'ultima viene utilizzata per riconoscere pattern o una sorta di correlazione tra i dati non
-visibile direttamente.
+Quest'ultima viene utilizzata per riconoscere pattern o una sorta di correlazione tra i dati non direttamente
+visibile.
 
 \subsubsection{Implementazione}
 Come primo step implementativo è stato necessario scrivere una funzione che rendesse ogni serie stazionaria 
 mediante l'ausilio del test di Dickey-Fuller ed il calcolo della prima differenza. Ovviamente
 per rendere una serie stazionaria esistono anche altri metodi diversi dalla prima differenza ma 
-si è deciso di utilizzarle quest'utlima per la sua semplicità.
-\\
+si è deciso di utilizzarle quest'ultima per la sua semplicità.
+
 \paragraph*{Snippet} (\textit{Prima differenza})
 \begin{minted}{python3}
     def compute_first_diff(series: list | np.ndarray):
@@ -69,7 +69,7 @@ si è deciso di utilizzarle quest'utlima per la sua semplicità.
         step = 0   # numero di step
         s_copy = series.copy()  # copia della serie
         
-        # fino a quando il test ritornca che la serie
+        # fino a quando il test ritorna che la serie
         # non è stazionaria oppure sono stati superati
         # il massimo di step
         while(sts.adfuller(series)[1] > 0.05 
@@ -89,7 +89,7 @@ si è deciso di utilizzarle quest'utlima per la sua semplicità.
 
 \begin{sloppypar}
 Dopo aver reso ogni serie stazionaria è stata applicata la funzione di autocorrelazione ad ognuna di
-esse, per capire meglio i risultati di questa operazione prendiamo in cosniderazione alcuni dei 
+esse. Per capire meglio i risultati di questa operazione, prendiamo in considerazione alcuni dei 
 grafici relativi all'autocorrelazione di serie appartenenti a dataset dei soggetti $6$ ed $12$.
 \end{sloppypar}
 
@@ -135,7 +135,7 @@ con una normale sinusoide (coseno e seno).
 \end{figure}
 
 Come possiamo vedere dai grafici in figura~\ref{fig:acf_cosine} e~\ref{fig:acf_sine} 
-possiamo pensiamo al passo di una persona come un seno oppre ad un coseno. L'idea di utilizzare la
+possiamo pensiamo al passo di una persona come un seno oppure ad un coseno. L'idea di utilizzare la
 funzione di autocorrelazione nasce dal fatto che quando iniziamo a shiftare la serie
 ed iniziamo a sovrapporre i passi, cioè quando le sinusoidi inizieranno ad allinearsi,
 la correlazione aumenterà trovando così il pattern di camminata e la durata di uno stride.
@@ -147,7 +147,7 @@ a destra o a sinistra dipendentemente dal verso in cui si vuole eseguire lo shif
 \end{sloppypar}
 
 
-Per dare un esempio più pratico prendiamo un sottoinseieme della serie relativa al piede 
+Per dare un esempio più pratico prendiamo un sottoinsieme della serie relativa al piede 
 destro posizione $1$ del soggetto sano $8$.
 
 \begin{figure}[H]
@@ -156,7 +156,7 @@ destro posizione $1$ del soggetto sano $8$.
     \caption{Autocorrelazione con esempi di segnale shiftato.}
     \label{fig:acf_subset_x_piede_dx_008}
 \end{figure}
-In figura~\ref{fig:acf_subset_x_piede_dx_008} possiamo travere diversi grafici relativi alla
+In figura~\ref{fig:acf_subset_x_piede_dx_008} possiamo trovare diversi grafici relativi alla
 serie del paziente indicato sopra. Spieghiamo ora il loro significato:
 \begin{enumerate}
     \item \textbf{Grafico in 1° posizione}: rappresenta la serie originale con una linea rossa (frame $300$)
@@ -176,11 +176,11 @@ serie del paziente indicato sopra. Spieghiamo ora il loro significato:
 \end{enumerate}
 
 Possiamo notare che il primo valore della funzione di autocorrelazione, cioè il valore della correlazione
-tra la seire originale e se stessa, è uguale ad $1$, di logica la massima correlazione possibile si può
+tra la serie originale e se stessa, è uguale ad $1$, di logica la massima correlazione possibile si può
 avere quando la serie è perfettamente allineata con se stessa.
 
 La correlazione tra la serie originale e la sua versione shiftata di $10$ lag invece ha valore
-quasi uguale a $0$, questo perchè se si guarda il grafico numero $2$ in figura, la serie 
+quasi uguale a $0$, questo perché se si guarda il grafico numero $2$ in figura, la serie 
 original e la sua versione shiftata in colore arancione si ``annullano'' avendo così correlazione
 nulla. In altre parole quando la correlazione è vicina a $0$ la serie con la sua versione shiftata
 sono ``molto'' diverse.
@@ -203,7 +203,7 @@ continuiamo con l'implementazione della soluzione proposta.
 \begin{sloppypar}
 Utilizzando la funzione \texttt{argrelextrema} del modulo \texttt{statsmodels.tsa.stattools}
 all'output della funzione di autocorrelazione è stato possibile recuperare gli argomenti (indici della lista) dei massimi locali.
-Per esempio se prendiamo in considerazione il grafico~\ref{fig:P006_x_piede_dx_1_acf} gli argomenti
+Per esempio, se prendiamo in considerazione il grafico in figura~\ref{fig:P006_x_piede_dx_1_acf} gli argomenti
 dei massimi locali sono
 \end{sloppypar}
 \[ [45, 95, 152, 197, 245, 297, 347, 395, 454, 504, 549, 592, 636, 678] \]
@@ -215,7 +215,7 @@ riesca ad ottenere con precisione quest'informazione, soprattutto se i dati non 
 \end{sloppypar}
 
 Continuado con l'implementazione del metodo, calcolando la distanza tra un argomento e l'altro troveremo
-la durata di quel determinato passo. Prendendo sempre in considerazione la lista di agromenti sopra
+la durata di quel determinato passo. Prendendo sempre in considerazione la lista di argomenti sopra
 e calcolandone la prima differenza otterremo
 \[[50, 57, 45, 48, 52, 50, 48, 59, 50, 45, 43, 44, 42]\]
 dove ogni elemento rappresenta la durata di un singolo stride.
@@ -262,7 +262,7 @@ un ``mini'' programma che esegue automaticamente queste istruzioni ad ogni serie
 \subsubsection{Analisi di complessità}
 \begin{sloppypar}
 Assumendo che la serie fornita sia già stazionaria la complessità di questo algoritmo 
-deriva pricipalmente dalla complessità della funzione \texttt{funzione\_autocorrelazione} e dalla complessità
+deriva principalmente dalla complessità della funzione \texttt{funzione\_autocorrelazione} e dalla complessità
 della funzione \texttt{singola\_autocorrelazione} utilizzata dalla funzione di autocorrelazione.
 
 Se consideriamo $n$ come la lunghezza della serie, 
@@ -273,7 +273,7 @@ spaziale $O(n)$.
 
 
 \subsubsection{Analisi dei risultati e Conclusioni}
-Per seplicità, i risultati verranno analizzati considerano un passo completo, cioè la somma degli stride
+Per semplicità, i risultati verranno analizzati considerano un passo completo, cioè la somma degli stride
 del piede destro e sinistro. Per fare chiarezza mostriamo un'immagine.
 \begin{figure}[H]
     \centering
@@ -305,15 +305,16 @@ in quanto le percentuali e le medie sono state calcolate con troppe poche osserv
 
 
 \paragraph*{Premessa sui risultati}
-I risultati sopra ottenuti non sono da prendere come riferimento in quanto essi sono ottenuti
-mediante l'ausilio di un metodo non totalmente sicuro. Il metodo utilizzato è sperimentale e tantomeno 
-fine allo scopo del tirocinio quindi potrebbe giungere a risultati non corretti 
-poiché la funzione di autocorrelazione potrebbe rilevare pattern e correlazioni diverse da quelle
-aspettate ed anche perché questa tecnica è stata applicata a serie filtrate in un certo modo.
+I risultati sopra ottenuti non sono da prendere come riferimento, essi sono ottenuti
+mediante l'applicazione dell'algoritmo sopra spiegato, ed essendo sperimentale e fine allo
+scopo del tirocinio, potrebbe giungere a risultati non realmente corretti.
+Bisogna tener conto che questa soluzione è stata applicata in un certo contesto con i dati
+filtrati in una certa maniera. Con dati differenti, la soluzione proposta, potrebbe 
+portare a risultati non soddisfacenti.
 
 \paragraph*{Problemi non totalmente risolti o ancora incogniti}
 Una incognita rimasta aperta dopo l'analisi dei grafici dell'autocorrelazione e delle serie originali
-è l'effetiva importanza in questa soluzione di rendere le serie stazionarie. 
+è l'effettiva importanza, in questa soluzione, di rendere ogni serie stazionaria. 
 La funzione di test Dickey-Fuller per l'analisi della stazionarietà fornita dal 
 pacchetto \texttt{statsmodels} ha la possibilità
 di capire automaticamente il numero di lag su cui eseguire il test e, per come è stato implementata
@@ -328,9 +329,15 @@ filtrati i dati in partenza, e quindi, per questa determinata applicazione, non 
 avere delle serie propriamente stazionarie.
 
 In breve con lo sviluppo di questa soluzione e l'interpretazione dei risultati ottenuti
-non si è riuscita a cogliere l'importanza di avere una serie stazionaria non trovando
-molta differenza tra una serie stazionaria ed una non stazionaria (sempre rimanendo nei
+non si è riuscita a cogliere l'importanza di avere una serie stazionaria, non trovando
+differenza tra una serie stazionaria ed una non (sempre rimanendo nei
 limiti di quest'applicazione).
+
+
+
+
+
+
 
 \subsection{Seconda Soluzione}
 In questa sezione verrà mostrata la seconda soluzione al problema posto, nello
@@ -339,19 +346,19 @@ l’analisi dei risultati, l’analisi della complessità ed infine
 le conclusioni.
 
 \subsubsection{Idea generale}
-In questa soluzione al problema si è pensato di considerare la scoposizione delle serie nelle 
+In questa soluzione al problema si è pensato di considerare la scomposizione delle serie nelle 
 loro componenti quali trend, stagionalità e residui. Nello specifico l'idea è nata
-pensado che possiamo considerare ad un passo (stride) di un soggetto come ad un evento periodico
+pensando che possiamo considerare ad un passo (stride) di un soggetto come ad un evento periodico
 che si ripete più o meno in ugual maniera nel tempo ad uno specifico periodo. Considerando quindi
-la scoposizione nelle tre compnenti di una serie, la stagionaità ad un determinato periodo potrebbe
+la scomposizione nelle tre componenti di una serie, la stagionalità ad un determinato periodo potrebbe
 rappresentare l'informazione che stiamo cercando di ottenere. Questo avviene solamente il linea teorica
 in quanto non è detto che il passo di un soggetto avvenga sempre ad intervalli precisi ma l'idea è che
 ad un certo periodo la stagionalità raccolga la maggior parte dell'informazione cercata.
 
 Essendo che questo processo si può provare attuare solamente guardando il grafico della stagionalità
-si è pensato di automatizzarlo cercando un algoritmo che, data una serie temporare relativa ad un giunto,
+si è pensato di automatizzarlo cercando un algoritmo che, data una serie temporale relativa ad un giunto,
 esso dia come risultato un periodo
-la cui stagionaità raccolga la maggior parte dell'informazione di un passo. Per fare ciò è stato 
+la cui stagionalità raccolga la maggior parte dell'informazione di un passo. Per fare ciò è stato 
 necessario comparare due serie, o meglio detto, è stato necessario comparare la serie relativa 
 ad un giunto divisa a metà considerando le due metà come serie separate. Successivamente
 si è calcolata la stagionalità su più periodi per entrambe le serie. In linea teorica i periodi con
