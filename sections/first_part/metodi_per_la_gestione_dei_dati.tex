@@ -1,7 +1,7 @@
 \subsection{Metodi per la gestione dei dati}
 In questo sottocapitolo verranno spiegati i metodi studiati ed utilizzati per la gestione dei
 dati in python, più nello specifico: come caricare un dataset, una possibile rinomina delle
-colonne ralative alle serie per una maggiore comprensione, scelta di un indice, individuazione dei valori
+colonne relative alle serie per una maggiore comprensione, scelta di un indice, individuazione dei valori
 nulli ed infine una sezione relativa al filtraggio.
 
 \paragraph{Cosa viene inteso per dataset} Per dataset si intende un insieme di
@@ -12,7 +12,7 @@ serie (nella nostra applicazione temporali) relative ad un'unica applicazione.
     relativi alla qualità dell'aria di Genova: livello di $\mathsf{CO_2}$,
     livello di $\mathsf{SO_2}$, livello di $\mathsf{NO_2}$ e temperatura in \textdegree$\mathsf{C}$.
     In un dataset possiamo considerare ogni parametro come una serie temporale diversa ma indicizzata
-    nel tempo in ugual maniera, quindi se queste misurazioni avvengono ogni ora avemo
+    nel tempo in ugual maniera, quindi se queste misurazioni avvengono ogni ora avemmo
     per ogni istante di tempo $t$ le misurazioni per ogni parametro in quell'istante.
     \begin{itemize}
         \setlength\itemsep{-0.5em}
@@ -23,17 +23,17 @@ serie (nella nostra applicazione temporali) relative ad un'unica applicazione.
     \end{itemize}
     Ogni parametro in un dataset viene rappresentato come una colonna.
 \end{esempio}
-Da qusto momento in poi, nel report, quando si parlerà di dataset varrà inteso il tipo
-\texttt{pandas.DataFrame}, cioè il modo in cui un dataset viene intrpretato all'interno
+Da questo momento in poi, nel report, quando si parlerà di dataset varrà inteso il tipo
+\texttt{pandas.DataFrame}, cioè il modo in cui un dataset viene interpretato all'interno
 di python, mentre per serie si intenderà il tipo \texttt{pandas.Series} oppure un semplice
 tipo \texttt{list} di python.
 
 \subsubsection{Pacchetti utilizzati}
-Per effettuare tutte le manovre relative all'elaborazione e manipolazione dei dati sono state
+Per effettuare tutte le manovre relative all'elaborazione e manipolazione dei dati, sono state
 utilizzate funzionalità fornite da pacchetti python come \texttt{pandas}, \texttt{numpy} e \texttt{scipy}, essi semplificano
-la scrittura di codice e velocizzano il tempo di sviluppo organizzando in maniera ottimale
+la scrittura di codice e velocizzano il tempo di sviluppo, organizzando in maniera ottimale
 i dati. Per essere utilizzati essi necessitano prima di essere installati tramite il
-gestore di pacchetti di python \texttt{pip}.
+gestore di pacchetti di python \texttt{pip} e successivamente importati.
 \paragraph{Snippet per l'installazione dei pacchetti}
 \begin{minted}{bash}
     pip install pandas
@@ -63,7 +63,7 @@ ad una serie.
 
 
 \subsubsection{Rinomina delle colonne relative alle serie}
-In qualche case, il primo passo da eseguire, è quello di rinominare
+In qualche caso, il primo passo da eseguire, è quello di rinominare
 le colonne relative ad ogni serie così da poter avere una rappresentazione
 più accurata del dataset.
 Tramite l'utilizzo della funzione \texttt{display} e del metodo \texttt{head}
@@ -110,7 +110,7 @@ il numero di riga per ogni misurazione, la differenza è che la prima colonna
 è generata automaticamente dal pacchetto \texttt{pandas}, ed impostata
 di default come indice, mentre la seconda con
 nome \texttt{no} è fornita direttamente dal file csv precedentemente caricato.
-Per l'analisi della maggior parte delle serie temporali un'idicizzazione per numero
+Per l'analisi della maggior parte delle serie temporali un'indicizzazione per numero
 di riga non è significativa, sarebbe molto più conveniente lavorare avendo
 come indice di tabella la data ed ora di ogni effettiva misurazione.
 A questo proposito il dataset caricato ci fornisce delle colonne (\texttt{year}
@@ -141,42 +141,49 @@ per il dataset.
     dataset.set_index("date", inplace=True)
     display(dataset.head())
 \end{minted}
-\begin{figure}[h!]
+
+\begin{figure}[H]
     \includegraphics[width=\linewidth,height=2.7cm]{head_after_index_set.png}
     \caption{output del metodo head dopo aver impostato l'indice}
     \label{fig:head_after_index_set}
 \end{figure}
-Come si può notare dall'output del metodo \texttt{head} nell'immagine \ref*{fig:head_after_index_set}
+
+Come si può notare dall'output del metodo \texttt{head} nell'immagine~\ref*{fig:head_after_index_set}
 \texttt{date} è stato impostato come indice di tabella e quindi da questo momento in poi
 possiamo accedere al dataset, scegliendo le misurazioni interessate, utilizzando la
 data.
 
 \paragraph{Periodo di campionamento}
-Un'altra importante modifica è impostare il periodo di campionamento del dataset,
-in poche parole impostare un corretto indice non basta a massimizzare il corretto
+\begin{sloppypar}   
+Un'altra importante modifica possibile è l'impostazione del periodo di campionamento del dataset.
+Impostare un corretto indice non basta a massimizzare il corretto
 funzionamento delle funzionalità di analisi delle serie temporali, bisogna anche specificare
 l'istante di tempo che occorre tra una misurazione e l'altra. Per fare ciò
-\texttt{pandas} fornise un metodo che imposta il periodo di campionamento
-a quello deiderato, nel nostro caso sappiamo che le misurazioni sono state campionate
+\texttt{pandas} fornisce un metodo che imposta il periodo di campionamento
+a quello desiderato, nel nostro caso sappiamo che le misurazioni sono state campionate
 ogni ora.
+\end{sloppypar}
+
 \subparagraph{Snippet}
 \begin{minted}{python3}
-    # imposta il periodo di capionamento 
+    # imposta il periodo di campionamento 
     # del dataset ad ogni ora
     dataset = dataset.asfreq("h")
 \end{minted}
 
 \subsubsection{Individuazione dei valori nulli e possibili soluzioni}
 La presenza di valori nulli in una serie può avere molteplici cause, ad esempio,
-l'impossibilità da parte dello strumento di capionare ad un certo istante di tempo $t$,
-oppure se pensiamo ad una fotocamera che acquisisce delle coordinate relative ad un soggeto,
-l'uscita di esso dall'obbiettivo.
+l'impossibilità da parte dello strumento di campionare ad un certo istante di tempo $t$,
+se pensiamo ad una fotocamera che acquisisce delle coordinate relative ad un soggetto,
+l'uscita di esso dall'obbiettivo renderà i valori nulli a quell'istante di tempo.
 
 Indifferentemente dal motivo per cui dei valori nulli sono presenti, 
 in una serie o un dataset, la loro presenza può causare molti
-problemi sia nel corretto funzionamento di alcune funzionalità per l'analisi sia perchè
-non avere dei valori in determinati punti della serie, in certe applicazioni, potrebbe
-essere un problema. \texttt{pandas} fornisce dei metodi utili, e semplici, alla soluzione di questo
+problemi, sia nel corretto funzionamento di alcune funzionalità per l'analisi sia perché
+avere dei valori in determinati punti della serie, in certe applicazioni, potrebbe
+essere un problema.
+
+\texttt{pandas} fornisce dei metodi utili, e semplici, alla soluzione di questo
 problema ma ovviamente ogni problema è diverso e quindi, per applicazioni specifiche,
 potrebbe essere necessario cercare soluzioni differenti. In questa sezione ci limitiamo
 a descrivere le funzionalità fornite da \texttt{pandas} per la soluzione a questo problema.
@@ -186,7 +193,7 @@ Per controllare la presenza di valori nulli \texttt{pandas} fornisce un metodo c
 \texttt{isna} che ritorna un dataset dove, per ogni misurazione, indica \texttt{True}
 se la misurazione è \texttt{NaN} altrimenti \texttt{False}. Sommando i valori \texttt{True}
 per ogni colonna possiamo controllare quanti valori nulli sono presenti per ogni serie.\\
-\\
+
 \subparagraph*{Snippet}
 \begin{minted}{python3}
     # controllo valori nulli
@@ -198,35 +205,38 @@ per ogni colonna possiamo controllare quanti valori nulli sono presenti per ogni
     \caption{output della somma dei valori nulli relativi ad ogni serie del dataset}
     \label{fig:sum_null}
 \end{figure}
+
 Come si puo notare dall'output del comando in figura~\ref*{fig:sum_null}
 il nostro dataset contiene molteplici valori nulli, ora vediamo come poter risolvere
-il segente problema
+il seguente problema
+
 
 \paragraph{Back fill o Forward fill}
-\texttt{pandas} fornisce la possibilità di ``riempire'' i valori nulli in due diverse
-modalità tramite l'utilizzo del metodo \texttt{fillna}
+\texttt{pandas} tramite l'utilizzo della funzione \texttt{fillna} fornisce la possibilità di 
+``riempire'' i valori nulli in due diverse modalità:
+
 \begin{itemize}
     \item \textbf{Back fill}: permette di sostituire i valori nulli con la succesiva
     misurazione valida.
     \item \textbf{Forward fill}:  permette di sostituire i valori nulli propagando
     l'ultima valida misurazione alla prossima valida.
 \end{itemize}
-Entrambi i metodi gestiscono i valori nulli più o meno nella stessa maniera ma la scelta
-di uno piuttosto che l'altro cambia da caso in caso dipendendtemente dal risultato
+
+Entrambi i metodi gestiscono i valori nulli più o meno nella stessa maniera, la scelta
+di uno piuttosto che l'altro cambia da caso in caso dipendentemente dal risultato
 ottenuto dopo l'utilizzo di essi.
 
-
 Per i nostri esempi il risulato nell'utilizzo di un metodo piuttosto che l'altro
-portava comunque ad un risultato soddisfacente.\\
-\\
+portava comunque ad un risultato soddisfacente, quindi vediamo ora un esempio di
+utilizzo.
 \subparagraph*{Snippet}
 \begin{minted}{python3}
-    # rimepimento dei valori nulli 
+    # riempimento dei valori nulli 
     # mediante il metodo di forward fill
     dataset = dataset.fillna(method="ffill")
     dataset.isna().sum()
 \end{minted}
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.24\linewidth,height=5cm]{somma_valori_nulli_dopo_fill.png}
     \caption{output della somma dei valori nulli relativi ad ogni serie del dataset dopo l'utilizzo del metodo \texttt{fillna}.}
@@ -247,7 +257,7 @@ Un altro metodo non convenzionale, non presente tra le funzionalità fornite,
 è quello di poter eliminare i valori nulli dalle serie semplicemente
 eliminandoli. Ovviamente questo concetto di eliminare una misurazione nulla va
 contro a tutte le premesse fatte fino ad ora, non avendo così una ``reale''
-serie temporale poichè mancherebbe una misurazione ad un determinato istante di tempo
+serie temporale poiché mancherebbe una misurazione ad un determinato istante di tempo
 $t$, e molte delle analisi che si vorrebbero poter fare su una serie risulterebbero
 inapplicabili. 
 Tuttavia, in qualche applicazione particolare (come vedremo in seguito), una funzionalità
@@ -257,7 +267,7 @@ che semplicemente elimina i valori nulli da una serie potrebbe tornare comoda.
     import math as math # import del pacchetto math
 
     def delete_nan(series: pd.Series | list):
-    """ emlimina i valori nulla da una serie
+    """ elimina i valori nulla da una serie
     """
     new_series = []
     for idx, value in enumerate(series):
@@ -268,7 +278,7 @@ che semplicemente elimina i valori nulli da una serie potrebbe tornare comoda.
 
 
 \subsubsection{Filtraggio}
-Nella maggior parte dei casi quando si parla di serie temporali fonite direttamente 
+Nella maggior parte dei casi quando si parla di serie temporali fornite direttamente 
 da apparecchiature che eseguono le misurazioni, i dati si presentano in maniera
 ``grezza'' ed è quindi necessario filtrarli per poter rimuovere una buona parte
 del rumore presente. Questo passaggio è molto importante se parliamo di dati non elaborati
@@ -292,7 +302,7 @@ frequenza di taglio e l'inclinazione (slope) della curva di taglio.
 
 Per poter apprezzare la differenza tra un segnale filtrato da un segnale ``grezzo''
 seguirà un esempio su come questo filtro possa essere applicato tramite l'utilizzo
-delle funzionalià fornite dal modulo precedentemente citato.
+delle funzionalità fornite dal modulo precedentemente citato.
 
 \begin{esempio} [Utilizzo del filtro di Butterworth]
 Consideriamo un segnale la cui distanza tra ogni misurazione è di $\frac{1}{30}$
@@ -323,7 +333,7 @@ così passare le basse frequenze.
     # frequenza di campionamento
     frequenza_di_campionamento = 30
 
-    # creazizone del filtro di Butterworth
+    # creazione del filtro di Butterworth
     b, a = signal.butter(inclinazione, 
                         frequenza_taglio, 
                         fs=frequenza_di_campionamento)
@@ -339,15 +349,17 @@ così passare le basse frequenze.
     \label{fig:segnale_filtrato}
 \end{figure}
 
-In figura~\ref*{fig:segnale_filtrato} viene rappresentato il segnale dopo l'applicazione
-del filtro passa basse di Butterworth, come si può notare una buona parte del rumore
-non è più presente e non avendo i picchi presentati nella sua versione non filtrata.
+Nel grafico in figura~\ref*{fig:segnale_filtrato} viene rappresentato il segnale dopo l'applicazione
+del filtro passa basse di Butterworth, come si può notare, una buona parte del rumore
+non è più presente.
 
 \end{esempio}
 
 
 \paragraph{Scelta dei parametri e del filtro}
-Dipendendtemente dal tipo di filtraggio che si vuole ottenere conviene applicare un 
-filtro piuttosto che un altro e la sua relativa scelta dei parametri cambia da
-applicazione ad applicazione e dal tipo di risultato che si vuole ottenere.
+La scelta del filtro, e dei suoi parametri, cambia da applicazione ad applicazione in base al tipo di 
+filtraggio che si vuole applicare ai dati. Per fare un esempio, se vogliamo rimuovere le frequenze alte
+sceglieremo un filtro passa-basse con una frequenza di taglio ed ordine che ci permettano di ottenere
+un risultato soddisfacente, mentre se volgiamo rimuovere le frequenze basse sceglieremo un filtro
+passa-alte con gli adeguati parametri.
 
