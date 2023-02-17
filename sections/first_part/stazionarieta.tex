@@ -2,13 +2,13 @@
 In questo sottocapitolo verrà spiegato il concetto di stazionarietà di una serie
 temporale e come poter capire se la serie interessata sia stazionaria.
  
-\paragraph{Stazionarietà di una serie temporale} %TODO: citare http://www.seanabu.com/2016/03/22/time-series-seasonal-ARIMA-model-in-python/
+\paragraph{Stazionarietà di una serie temporale}
 Per essere stazionaria una serie temporale deve soddisfare
 una lista di requisiti:
 \begin{enumerate}
     
     \item \textbf{Media costante nel tempo}: La media della serie non deve essere 
-    una funzione del tempo. Il grafico rosso, in figura~\ref*{fig:nons_mean}, non è stazionario 
+    una funzione del tempo. Il grafico rosso, in figura~\ref{fig:nons_mean}, non è stazionario 
     perché la media aumenta nel tempo~\cite{sa:stationary}.
 
     \begin{figure}[H]
@@ -20,8 +20,8 @@ una lista di requisiti:
 
 
     \item \textbf{Varianza costante nel tempo}: La varianza della serie non deve 
-    essere funzione del tempo. Questa proprietà è nota come omoscedasticità. 
-    Nel grafico rosso, in figura~\ref*{fig:nons_var}, 
+    essere funzione del tempo. Questa proprietà è nota come omoschedasticità. 
+    Nel grafico rosso, in figura~\ref{fig:nons_var}, 
     si noti la variazione della varianza dei dati nel tempo~\cite{sa:stationary}.
 
     \begin{figure}[H]
@@ -33,19 +33,19 @@ una lista di requisiti:
 
     \item \textbf{Covarianza costante nel tempo}: Infine, la covarianza del 
     termine $i$ e del termine $(i + m)$ non deve essere funzione del tempo. 
-    Nel grafico, in figura~\ref*{fig:nons_cov}, si può notare che lo spread 
+    Nel grafico, in figura~\ref{fig:nons_cov}, si può notare che lo spread 
     diventa più vicino all'aumentare del tempo. Pertanto, 
     la covarianza non è costante nel tempo per la ``serie rossa''~\cite{sa:stationary}.
 
     \begin{figure}[H]
         \centering
         \includegraphics[width=0.65\linewidth,keepaspectratio]{nonstationary_cov.png}
-        \caption{Coviarianza non costante nel tempo.}
+        \caption{Covarianza non costante nel tempo.}
         \label{fig:nons_cov}
     \end{figure}
 
     Per capire meglio il concetto di covarianza costante nel tempo 
-    consideriamo una sequanza di variabili casuali, esse si definiscono
+    consideriamo una sequenza di variabili casuali, esse si definiscono
     con stazionarietà debole o stazionarietà della covarianza se:
 
     \begin{itemize}
@@ -83,7 +83,7 @@ Per una valutazione più accurata esiste il test di Dickey-Fuller~\cite{sa:stati
 In statistica, il test di Dickey Fuller verifica l'ipotesi nulla della presenza
 di una radice unitaria in un modello autoregressivo di una serie temporale. 
 L'ipotesi alternativa è diversa a seconda della versione del test utilizzata, 
-ma di solito è la stazionarietà o la trend-stazionarietà~\cite{wiki:dickey_fuller}.
+ma di solito è la stazionarietà o la trend-stazionarietà (media e varianza costanti nel tempo)~\cite{wiki:dickey_fuller}.
 
 \paragraph{Modello autoregressivo}
 Senza scendere troppo nei dettagli matematici diamo solamente la definizione di 
@@ -93,20 +93,26 @@ un modello autoregressivo (AR) è una rappresentazione di
 un tipo di processo casuale; come tale, viene utilizzato 
 per descrivere alcuni processi variabili nel tempo in natura, 
 economia, comportamento, ecc.
-Un semplice modello AR è
+Un semplice modello AR di prim'ordine è
 \[ y_t = \rho y_{t-1} + u_t \]
 dove $y_t$ è la nostra osservazione all'istante di tempo $t$, $\rho$ è un coefficiente
-e $u_t$ è l'errore (assunta essere white noise, quindi stazionaria)~\cite{wiki:dickey_fuller}.\\
-In altre parole se pensiamo alla nostra serie temporale ogni osservazione ad istante $t$
+e $u_t$ è l'errore (assunta essere white noise, quindi stazionaria)~\cite{wiki:dickey_fuller}.
+
+In altre parole, se pensiamo alla nostra serie temporale, ogni osservazione ad istante $t$
 dipende da un numero arbitrario osservazioni precedenti più un errore.
+
+Se prendiamo come esempio il modello autoregressivo di prim'ordine mostrato sopra allora
+esso si dice avere una radice unitaria se il coefficiente $\rho$ è uguale ad $1$.
+Se è presente una radice unitaria allora il processo non sarà stazionario e dipenderà da $t$
+(per un approfondimento migliore~\cite{wiki:unit_root} e~\cite{wiki:dickey_fuller}).
 
 \paragraph{Utilizzo del test nella pratica}
 Per poter utilizzare questo test nella pratica verranno sfruttate le 
 funzionalità del modulo \texttt{statsmodels.tsa.stattools} fornite dal 
 pacchetto \texttt{statsmodels} precedentemente utilizzato. Più
 precisamente la funzione fornita dal modulo è il test di 
-``Dichey-Fuller aumentato'' che fornisce un numero negativo, questo più 
-è negativo tanto maggiore è il rifiuto dell'ipotesi nulla che esista una unit root
+``Dickey-Fuller aumentato'' che fornisce un numero negativo, questo più 
+è negativo tanto maggiore è il rifiuto dell'ipotesi nulla che esista una unit root (radice unitaria)
 ad un certo livello di confidenza~\cite{wiki:aug_dickey_fuller}.
 
 \subparagraph*{Snippet}
@@ -141,17 +147,17 @@ ad un certo livello di confidenza~\cite{wiki:aug_dickey_fuller}.
     \label{fig:adft_out_ns}
 \end{figure}
 
-In questo caso facendo riferimento all'output ottenuto, in figura~\ref*{fig:adft_out_ns},
+In questo caso facendo riferimento all'output ottenuto, in figura~\ref{fig:adft_out_ns},
 il valore interessato è \texttt{T-stat}, esso è da confrontare con i valori delle variabili
 relative alle percentuali di valore critico. Per ogni valore critico controlliamo se
-\texttt{T-stat} è maggiore o minore, nel nostro caso \texttt{T-stat} è maggiore del valore critico
+\texttt{T-stat} è maggiore o minore. Nel nostro caso \texttt{T-stat} è maggiore del valore critico
 che si riferisce al $10\%$ quindi si ha più del $10\%$ di possibilità che la nostra ipotesi nulla
 non sia rifiutata. In altre parole abbiamo più del $10\%$ di possibilità che la nostra
 serie temporale non sia stazionaria. Solitamente per considerare una serie temporale 
 stazionaria si necessita almeno di $5\%$ quindi un livello di confidenza (che il test rifiuti
 l'ipotesi nulla e che quindi vede la nostra serie stazionaria) del $95\%$.
 Per semplificarci la vita possiamo direttamente controllare il valore di \texttt{p-value}
-(valore comprso tra $0 < \texttt{p-value} < 1$), se esso risulta minore di $0.05$ possiamo considerare
+(valore compreso tra $0 < \texttt{p-value} < 1$), se esso risulta minore di $0.05$ possiamo considerare
 la serie stazionaria.
 
 \paragraph{Come rendere una serie stazionaria}
@@ -161,5 +167,5 @@ applicazioni, è calcolare la prima differenza (differenza di prim'ordine). Se c
 come $Y$ una serie temporale e con $\hat{Y}$ la medesima dopo aver calcolato la prima 
 differenza ogni osservazione di essa sarà definita come
 \[ \hat{y}_t = y_{t+1} - y_t \]
-dove $\hat{y}_t$ è un'ossevazione di $\hat{Y}$ ed $y_{t}$ un'ossevazione di $Y$, ad un istante
+dove $\hat{y}_t$ è un'osservazione di $\hat{Y}$ ed $y_{t}$ un'osservazione di $Y$, ad un istante
 di tempo $t$.
