@@ -76,11 +76,12 @@ vediamo come i dataset si presentano prima e dopo l'applicazione di essa.
     \label{fig:ds_dopo_rinomina}
 \end{figure}
 
-Come possiamo notare dalle figure~\ref*{fig:ds_prima_rinomina} e~\ref*{fig:ds_dopo_rinomina}
+\begin{sloppypar}
+Come possiamo notare dalle figure~\ref{fig:ds_prima_rinomina} e~\ref{fig:ds_dopo_rinomina}
 i nomi delle colonne dei dataset sono state rinominate, esse ora rappresentano meglio
 la realtà ed il loro accesso su python è facilitato, poiché è possibile accedervi utilizzando
 il comando \texttt{dataset\_name.nome\_giunto} invece che \texttt{dataset\_name['nome\_giunto']}.
-
+\end{sloppypar}
 
 
 \subsection{Gestione dei valori nulli}
@@ -91,8 +92,8 @@ di machine learning, di ottenere una posizione per i giunti interessati.
 Essendo che l'obbiettivo finale del tirocinio non è quello di eseguire delle predizioni
 sulle serie temporali ma quello di inferire sui dati utilizzando le tecniche
 dell'analisi di serie temporali, i valori nulli sono stati semplicemente eliminati.
-In questa maniera consideriamo consecutivi dati che effettivamente non lo sarebbero
-ma questo non è stato un problema nelle succesive analisi poichè la maggior parte dei 
+In questa maniera consideriamo consecutivi dati che effettivamente non lo sarebbero,
+questo non è stato un problema nelle successive analisi poiché la maggior parte dei 
 valori nulli era presente nei momenti in cui il soggetto si girava per eseguire un'ulteriore
 camminata davanti all'obiettivo.
 
@@ -113,7 +114,7 @@ un'idea di come i dati si presentano.
     \label{fig:anca_dx_nan}
 \end{figure}
 
-Come possiamo notare dai grafici in figura~\ref*{fig:piede_dx_1_nan} e~\ref*{fig:anca_dx_nan}
+Come possiamo notare dai grafici in figura~\ref{fig:piede_dx_1_nan} e~\ref{fig:anca_dx_nan}
 le serie contengono valori nulli nei punti in cui il soggetto esce dall'obiettivo girandosi
 per un'altra camminata davanti all'obiettivo.
 
@@ -131,35 +132,33 @@ per un'altra camminata davanti all'obiettivo.
     \label{fig:anca_dx_no_nan}
 \end{figure}
 
-Guardando i grafici rappresentati in figura~\ref*{fig:piede_dx_1_no_nan} e~\ref*{fig:anca_dx_no_nan}
+Guardando i grafici rappresentati in figura~\ref{fig:piede_dx_1_no_nan} e~\ref{fig:anca_dx_no_nan}
 possiamo notare come i valori nulli sono stati eliminati considerando così ogni camminata 
 davanti all'obiettivo continua.
 
 
 \subsection{Scelta dell'indice di tabella per ogni dataset}
 Un'osservazione che nasce spontanea dall'osservazione dei grafici in figura
-~\ref*{fig:piede_dx_1_nan},~\ref*{fig:anca_dx_nan},~\ref*{fig:piede_dx_1_no_nan}
-e~\ref*{fig:anca_dx_no_nan} e dalle tabelle in figura~\ref*{fig:ds_prima_rinomina}
-e~\ref*{fig:ds_dopo_rinomina} è che i dataset non sono indicizzati nel tempo utilizzando
+~\ref{fig:piede_dx_1_nan},~\ref{fig:anca_dx_nan},~\ref{fig:piede_dx_1_no_nan}
+e~\ref{fig:anca_dx_no_nan} e dalle tabelle in figura~\ref{fig:ds_prima_rinomina}
+e~\ref{fig:ds_dopo_rinomina} è che i dataset non sono indicizzati nel tempo utilizzando
 la classica indicizzazione come \texttt{anno/mese/giorno ora:minuti:secondi} ma sono indicizzati
 in base al frame di acquisizione quindi al numero di riga della tabella.
-Questo non è un problema dal punto di vista dell'analisi di ogni serie poichè noto il frame
-di acquisizione e la frequenza di campionamento si riuscirà facilmente a risalire ai secodni.
+Questo non è un problema dal punto di vista dell'analisi di ogni serie poiché noto il frame
+di acquisizione e la frequenza di campionamento si riuscirà facilmente a risalire ai secondi.
 
 Nel nostro caso, sapendo che i dati sono stati acquisiti con una frequenza di campionamento di 
-$30\mathsf{Hz}$, e presa una qualsiasi misurazione ad un certo frame risaliremo al secondo
+$30\mathsf{Hz}$, presa una qualsiasi misurazione ad un determinato frame, risaliremo al secondo
 di tempo con la seguente formula
-\[ S_\texttt{frame} = \frac{\texttt{frame}}{30} \]
-dove $S_f$ sono i secondi trascorsi dal frame $0$ al frame $\texttt{frame}$ e $\texttt{frame}$ 
-è il numero del frame interessato.
+\[\frac{\texttt{frame}}{30} \]
 
 
 \subsection{Filtraggio dei dataset}
-Come si può notare dai grafici in figura~\ref*{fig:piede_dx_1_nan},~\ref*{fig:anca_dx_nan},~\ref*{fig:piede_dx_1_no_nan}
-e~\ref*{fig:anca_dx_no_nan} le serie dei dataset contengono molto rumore causato da una sbagliata 
+Come si può notare dai grafici in figura~\ref{fig:piede_dx_1_nan},~\ref{fig:anca_dx_nan},~\ref{fig:piede_dx_1_no_nan}
+e~\ref{fig:anca_dx_no_nan} le serie dei dataset contengono molto rumore causato da una sbagliata 
 lettura della posizione, di ogni giunto, da parte dell'algoritmo di machine learning.
 
-Come spiegato nella precedente sottosezione sul filtraggio, il rumore risiede principalemente nelle
+Come spiegato nella precedente sottosezione sul filtraggio, il rumore risiede principalmente nelle
 alte frequenze di un segnale.
 
 In linea teorica si è pensato che tutte le frequenze più alte di $2\mathsf{Hz}$ possano essere rumore,
@@ -167,7 +166,7 @@ quindi in sostanza si andranno ad eliminare tutte le periodicità e movimenti pe
 che avvengono sotto $0.5 \mathsf{secondi}$. 
 
 Una soluzione migliore sarebbe stata quella di analizzare
-ogni serie e, per ciascuna di esse, aplicare un filtro con una frequenza di taglio ottimale così da
+ogni serie e, per ciascuna di esse, applicare un filtro con una frequenza di taglio ottimale così da
 non eliminare informazioni importanti. Per lo scopo di questo tirocinio, come verrà spiegato in seguito,
 ci soffermeremo sull'analisi dei giunti relativi al piede e quindi una frequenza di taglio di $2\mathsf{Hz}$
 potrebbe essere sufficiente a non perdere nessuna informazione importante.
@@ -179,12 +178,12 @@ allora il la frequenza di taglio scelta non elimina la periodicità interessata 
 ad individuarla nel grafico.
 
 Nella pratica se applichiamo una frequenza di taglio di $2\mathsf{Hz}$ il segnale rimane con del rumore
-e delle periodicità indesiderate, questo è duvuto al cruciale ruolo che svolge l'ordine del filtro.
+e delle periodicità indesiderate, questo è dovuto al cruciale ruolo che svolge l'ordine del filtro.
 Dopo svariati tentativi si è riuscito ad ottenere un risultato soddisfacente utilizzando una frequenza
 di taglio di $1.2\mathsf{Hz}$ con un ordine di filtro $10$.
 
-Guardiamo ora il risultato finale, ottenuto dopo l'applicazione del filtro con i parametri descritti
-precedentemente, ed una serie non filtrata.
+Guardiamo ora delle serie prima e dopo l'applicazione del filtro con i parametri descritti
+precedentemente.
 
 
 \begin{figure}[H]
@@ -218,17 +217,12 @@ e~\ref{fig:piede_dx_1_pat_no_filt} le serie non sono filtrate e contengono molto
     \label{fig:piede_dx_1_pat_filt}
 \end{figure}
 
-l'effetto sinusoidale del grafico rappresenta l'andamento del passo di un soggetto, 
-nello specifico se consideriamo il coefficiente angolare delle rette tangenti ai punti del 
-grafico, quindi la sua derivata prima, e consideriamo come inizio del passo il 
-primo punto in cui la derivata è uguale a $0$ la fine di un passo sarà il punto successivo 
-in cui la sua derivata prima è uguale a $0$. 
-
 
 Dai grafici in figura~\ref{fig:piede_dx_1_sano_filt} 
 e~\ref{fig:piede_dx_1_pat_filt} possiamo notare come il filtro ha rimosso il rumore 
-presente dalle serie e come l'effetto sinusoidale rimasto rappresenta l'andamento del passo di un soggetto.
-nello specifico se consideriamo il coefficiente angolare delle rette tangenti ai punti del 
+presente dalle serie e come l'effetto sinusoidale rimasto rappresenta l'andamento del passo di 
+un soggetto.
+Nello specifico se consideriamo il coefficiente angolare delle rette tangenti ai punti del 
 grafico, quindi la sua derivata prima, e consideriamo come inizio del passo il 
 primo punto in cui la derivata è uguale a $0$ la fine di un passo sarà il successivo punto 
 in cui la sua derivata prima è uguale a $0$. 
@@ -238,7 +232,7 @@ e~\ref{fig:piede_dx_1_pat_filt} è che si può notare la presenza della periodic
 relativa ad un'andata e ritorno del soggetto,
 essendo che sicuramente avviene più lentamente della periodicità di uno stride, essa
 risiede nelle frequenze ``molto basse''. 
-Per cercare di isolare maggiornmente la caratteristica del passo
+Per cercare di isolare maggiormente la caratteristica del passo
 si è deciso di eliminare questa periodicità
 andando a filtrare con un filtro passa alte le frequenze ``bassissime'' o almeno
 abbastanza basse da rimuovere solamente quella periodicità senza 
@@ -265,10 +259,10 @@ e~\ref{fig:piede_dx_1_pat_filt} a confronto prima e dopo l'ultima fase di filtra
     \label{fig:piede_dx_1_pat_filt2}
 \end{figure}
 
-Come possiamo notare dai grafici in figura~\ref*{fig:piede_dx_1_sano_filt2} 
-e~\ref*{fig:piede_dx_1_pat_filt2} la componente periodica di andata e ritorno 
+Come possiamo notare dai grafici in figura~\ref{fig:piede_dx_1_sano_filt2} 
+e~\ref{fig:piede_dx_1_pat_filt2} la componente periodica di andata e ritorno 
 è stata eliminata 
 e consideriamo il secondo grafico di ogni figura possiamo notare come i massimi locali 
 delle componenti sinusoidali rappresentino l'inizio di ogni passo del soggetto,
-quindi i frame che intercorrono tra un punto di masssimo locale e quello successivo rappresentano
+quindi i frame che intercorrono tra un punto di massimo locale e quello successivo rappresentano
 uno stride di un soggetto.
