@@ -13,7 +13,9 @@ ridotto all'analisi dei soli giunti del piede, più in particolare,
 il tirocinio si è basato sulla ricerca di uno o più metodi utili a trovare la durata del passo
 (stride) di un soggetto con una successiva analisi dei risultati.
 
-
+Da questo punto in avanti quando si farà riferimento a serie relative a posizioni del piede 
+verranno sempre considerate le serie relative all'asse $x$, quindi le posizioni dei giunti del piede
+sull'asse delle ascisse.
 
 \paragraph{Risultati attesi}
 \begin{sloppypar}
@@ -33,8 +35,9 @@ In caso positivo, quindi di una possibile soluzione al problema posto, i risulta
 
 \subsection{Prima soluzione}
 In questa sezione verrà mostrata la prima soluzione al problema posto, nello specifico verrà
-spiegata in breve l'idea generale, l'implementazione di alcuni dei metodi utilizzati, l'analisi dei
-risultati, l'analisi della complessità ed infine le conclusioni.
+spiegata in breve l'idea generale, l'implementazione di alcuni dei metodi utilizzati, 
+l'analisi della complessità ed infine l'analisi dei
+risultati con relative conclusioni.
 
 
 \subsubsection{Idea generale}
@@ -321,9 +324,9 @@ di capire automaticamente il numero di lag su cui eseguire il test e, per come �
 la soluzione, l'algoritmo rileva un numero di lag non sufficiente per ottenere un risultato 
 di test veritiero.
 
-Considerato il fatto che la funzione della soluzione che rende le serie stazionarie non 
-rileva propriamente quando una serie è stazionaria, e quindi tutte le analisi successive
-sono state eseguite su serie non propriamente stazionarie, i risultati ottenuti non sono
+Nonostante la funzione che rende le serie stazionarie non 
+rilevi propriamente quando una serie è stazionaria, e quindi tutte le analisi successive
+sono state eseguite su serie non propriamente stazionarie, i risultati ottenuti non
 si discostano molto dalla realtà. Questo potrebbe essere dovuto a come sono stati
 filtrati i dati in partenza, e quindi, per questa determinata applicazione, non è stato necessario 
 avere delle serie propriamente stazionarie.
@@ -340,43 +343,91 @@ limiti di quest'applicazione).
 
 
 \subsection{Seconda Soluzione}
-In questa sezione verrà mostrata la seconda soluzione al problema posto, nello
-specifico verrà spiegata in breve l’idea generale, l’implementazione di alcune parti relative all'algoritmo, 
-l’analisi dei risultati, l’analisi della complessità ed infine
-le conclusioni.
+In questa sezione verrà mostrata la seconda soluzione al problema posto. Nello
+specifico verrà spiegata in breve l’idea generale, l’implementazione di alcune parti relative all'algoritmo,
+l’analisi della complessità ed infine
+l'analisi dei risultati con relative conclusioni.
 
 \subsubsection{Idea generale}
-In questa soluzione al problema si è pensato di considerare la scomposizione delle serie nelle 
+In questa soluzione al problema si è pensato di analizzare la scomposizione delle serie nelle 
 loro componenti quali trend, stagionalità e residui. Nello specifico l'idea è nata
 pensando che possiamo considerare ad un passo (stride) di un soggetto come ad un evento periodico
 che si ripete più o meno in ugual maniera nel tempo ad uno specifico periodo. Considerando quindi
-la scomposizione nelle tre componenti di una serie, la stagionalità ad un determinato periodo potrebbe
-rappresentare l'informazione che stiamo cercando di ottenere. Questo avviene solamente il linea teorica
-in quanto non è detto che il passo di un soggetto avvenga sempre ad intervalli precisi ma l'idea è che
-ad un certo periodo la stagionalità raccolga la maggior parte dell'informazione cercata.
+la scomposizione nelle tre componenti di una serie, la stagionalità, ad un determinato periodo, potrebbe
+rappresentare l'informazione che stiamo cercando di ottenere.
 
-Essendo che questo processo si può provare attuare solamente guardando il grafico della stagionalità
+Essendo che questo processo si può provare ad attuare solamente guardando il grafico della stagionalità
 si è pensato di automatizzarlo cercando un algoritmo che, data una serie temporale relativa ad un giunto,
-esso dia come risultato un periodo
-la cui stagionalità raccolga la maggior parte dell'informazione di un passo. Per fare ciò è stato 
-necessario comparare due serie, o meglio detto, è stato necessario comparare la serie relativa 
-ad un giunto divisa a metà considerando le due metà come serie separate. Successivamente
-si è calcolata la stagionalità su più periodi per entrambe le serie. In linea teorica i periodi con
-stagionalità simili sarebbero dovute essere i pattern che occorrono in entrambe le serie,
-mentre le stagionalità ``diverse'' sarebbero dovute essere pattern che non rientrano 
-in entrambe probabilmente dovuto ad altre motivazioni quali, ad esempio, del rumore ancora presente.
+dia come risultato un periodo, la cui stagionalità raccolga la maggior parte dell'informazione di un passo. 
+
+Per fare ciò si è pensato di dividere la serie a metà considerando le due parti come serie differenti
+e successivamente calcolarne la stagionalità su più periodi. I periodi quali stagionalità si 
+assomigliano per entrambe le metà, fanno riferimento a pattern (stagionali) che occorrono 
+in entrambe le serie, tra cui il passo del soggetto; mentre i periodi quali stagionalità
+non si somigliano, fanno riferimento a pattern che non occorrono in entrambe, causati da possibile
+rumore o movimenti periodici che si manifestano in una metà ma non nell'altra.
+
+Questa è una prova, non è detto che in questa modalità si riuscirà ad ottenere perfettamente l'informazione
+richiesta, probabilmente si otterranno anche altre informazioni non legate alla durata di un passo.
+Il risultato sperato è che la stagionalità che si riferisce ad un passo sia l'unica che si somiglia in 
+entrambe le metà.
+
+Prima di passare all'implementazione cerchiamo di capire con un esempio cosa si intende 
+per raccogliere l'informazione di un passo con la stagionalità.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,keepaspectratio]{m2_stag_008.png}
+    \caption{Serie x piede destro posizione 1 con stagionalità calcolata con periodo $38$.}
+    \label{fig:m2_stag_008}
+\end{figure}
+
+In figura~\ref{fig:m2_stag_008} troviamo in blu la serie originale, quindi la posizione x del piede 
+destro relativa al paziente $8$, mentre in arancione la stagionalità relativa alla serie 
+in blu calcola con periodo $38$. Possiamo vedere come la stagionalità sembra catturare l'informazione
+relativa ad un passo.
+
+Vediamo cosa succede se prendiamo una stagionalità calcolata su un periodo che non si avvicina a 
+quella di un passo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,keepaspectratio]{m2_stag_008_51.png}
+    \caption{Serie x piede destro posizione 1 con stagionalità calcolata con periodo $51$.}
+    \label{fig:m2_stag_008_51}
+\end{figure}
+
+Come si puo notare dal grafico in figura~\ref{fig:m2_stag_008_51}, la stagionalità calcolata con periodo $51$
+sembra non catturare la periodicità di un passo.
 
 
+Ora guardiamo un esempio di stagionalità ma dividendo la serie originale in due metà.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,keepaspectratio]{m2_stag_008_div2.png}
+    \caption{Serie x piede destro posizione 1 diviso in due + stagionalità calcolata con periodo $38$.}
+    \label{fig:m2_stag_008_div2}
+
+    \includegraphics[width=\linewidth,keepaspectratio]{m2_stag_008_div2_sov.png}
+    \caption{Stagionalità della prima metà e della seconda sovrapposte.}
+    \label{fig:m2_stag_008_div2_sov}
+\end{figure}
+
+Nei grafici in figura~\ref{fig:m2_stag_008_div2} possiamo vedere la serie x del piede riferita al soggetto 
+$8$ divisa a metà con le seguenti stagionalità calcolate su periodo $38$ (verde e rosso).
+Nel grafico in figura~\ref{fig:m2_stag_008_div2_sov} sono raffigurate le due stagionalità
+sovrapposte. Come si può notare, le stagionalità sono simili, quindi il periodo considerato
+(in questo caso $38$) fa riferimento ad un pattern che ripete in ugual maniera in entrambe le serie.
 
 
 
 \subsubsection{Implementazione}
-Per prima cosa è necessario dividere una serie relativa ad un giunto di un soggetto in due e decidere
+Per prima cosa è necessario dividere una serie relativa ad un giunto di un soggetto in due, e decidere
 su quali periodi calcolare la stagionalità.
 
 \begin{sloppypar}
 Successivamente per ogni periodo si è calcolata la stagionalità delle due parti
-calcolandone la differenza quindi l'errore tra le due stagionalità. Per calcolare la stagionalità
+calcolandone la differenza, quindi l'errore tra le due stagionalità. Per calcolare la stagionalità
 è stata utilizzata la funzione \texttt{seasonal\_decompose} del modulo \texttt{statsmodels.tsa.seasonal}
 relativo al pacchetto \texttt{statsmodels}, mentre per il calcolo dell'errore
 le due stagionalità sono state convertite nel dominio delle frequenze, utilizzando la trasformata
@@ -417,7 +468,7 @@ Vediamo ora come è stata implementata la funzione che esegue il calcolo dell'er
 
 
 Vediamo ora il metodo principale.
-\paragraph*{Snippet} (\textit{Metodo per la soluzione al problema (2)})
+\paragraph*{Snippet} (\textit{Metodo per la soluzione al problema})
 \begin{minted}{python3}
     def soluzione_2(seriesList, periods):
         """ 
@@ -467,26 +518,21 @@ Vediamo ora il metodo principale.
         return np.min(errors), periods[np.argmin(errors)], errors
 \end{minted}
 
-Come possiamo vedere dall'implementazione come risultato otteniamo l'errore minimo, il periodo
+Come possiamo vedere dall'implementazione otteniamo come risultato del metodo l'errore minimo, il periodo
 associato all'errore minimo e la lista contenente, per ogni periodo, l'errore associato.
 
 In una fase successiva è stata creata una funzione che permette di analizzare la lista relativa
-agli errori per ogni periodo creando dei grafici che indicano i periodi ``salienti''. 
-L'implementazione di quet'ultima non verrà data ma il concetto è che per periodi piccoli l'errore
-è sempre il minimo e crescente e, dopo un certo periodo, l'errore inizia ad aumentare drasticamente
-per poi diminuire successivamente dopo aver trovato una stagionalià nuovamente simile tra le due serie.
-Per capire meglio consideriamo la lista degli errori tra $1$ e $30$, in questo range l'errore è crescente
-per ogni periodo, dal periodo $31$ in poi l'errore aumenta drasticamente fino al periodo $80$ per poi diminuire
-nuovamente ed ad un certo punto riaumentare. Questo è dovuto appunto al fatto che quando le stagionalità non si
-``assomigliano'' l'errore sarà alto mentre per stagionalità simili l'errore è minimo o comunque molto basso.
+agli errori per ogni periodo, creando dei grafici che indicano i periodi ``salienti''. 
+L'implementazione di quest'ultima non verrà data, in quanto non rilevante allo scopo finale.
 
 \subsubsection{Analisi di complessità}
-Consideriamo come $m$ il numero di sottoinsiemi, di ugual lunghezza, creati a partire da una serie 
-(negli esempi sopra abbiamo sempre considerato di dividere la serie in due parti),
-$n$ la lunghezza di un sottoinsieme, $S$ la complessità della 
-funzione \texttt{seasonal\_decompose} e tenuto conto che il periodo massimo su cui è possibile
-calcolare quest'ultima è di $(m/2)$, la complessità temporale della seconda soluzione è 
-$O( (n/2)m\log{(m)}Sn\log{(n)} )$ mentre la complessità spaziale sarà $O( n+2n+(n/2) )$ quindi $O(n)$.
+L'analisi di complessità della seconda soluzione non è di facile calcolo. Per dare un'idea
+generale, indichiamo con $n$ la lunghezza di una singolo sottoinsieme. La complessità 
+del metodo dipenderà dal numero di periodi su cui calcolare le stagionalità,
+quindi al massimo $(n/2)$ poiché la funzione \texttt{seasonal\_decompose} accetta come massimo
+periodo $(n/2)$, dalla complessità della funzione di \texttt{seasonal\_decompose} e dalla 
+complessità della funzione di Fast Fourier Transform.
+La complessità spaziale del secondo metodo invece sarà $O(n)$.
 
 
 \subsubsection{Analisi dei risultati e Conclusioni}
@@ -494,62 +540,70 @@ Analizziamo ora qualche grafico cercando di capire meglio come rappresentare i r
 spiegato nella sezione precedente.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth,keepaspectratio]{x_piede_sx_1_006.png}
-    \caption{Grafico degli errori per ogni periodo relativo al piede sinitro posizione 1 del soggetto patologico $6$.}
+    \includegraphics[width=\linewidth,keepaspectratio]{x_piede_sx_1_006.png}
+    \caption{Grafico degli errori per ogni periodo relativo alle x piede sinistro posizione 1 del soggetto patologico $6$.}
     \label{fig:x_piede_sx_1_006_m2}
 \end{figure}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth,keepaspectratio]{x_piede_sx_1_008.png}
-    \caption{Grafico degli errori per ogni periodo relativo al piede sinitro posizione 1 del soggetto sano $8$.}
+    \includegraphics[width=\linewidth,keepaspectratio]{x_piede_sx_1_008.png}
+    \caption{Grafico degli errori per ogni periodo relativo alle x piede sinistro posizione 1 del soggetto sano $8$.}
     \label{fig:x_piede_sx_1_008_m2}
 \end{figure}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth,keepaspectratio]{x_piede_sx_1_021.png}
-    \caption{Grafico degli errori per ogni periodo relativo al piede sinitro posizione 1 del soggetto patologico $21$.}
+    \includegraphics[width=\linewidth,keepaspectratio]{x_piede_sx_1_021.png}
+    \caption{Grafico degli errori per ogni periodo relativo alle x piede sinistro posizione 1 del soggetto patologico $21$.}
     \label{fig:x_piede_sx_1_021_m2}
 \end{figure}
 
 Nei grafici in figura~\ref*{fig:x_piede_sx_1_006_m2},~\ref*{fig:x_piede_sx_1_008_m2} e~\ref*{fig:x_piede_sx_1_021_m2}
 sono rappresentati gli errori sull'asse delle ordinate ed i periodi, a cui ogni errore è associato,
 sull'asse delle ascisse. Le linee rosse verticali rappresentano i punti salienti, calcolate mediante
-l'asulio di una funzione che utilizza la media e deviazione standard della differenza tra un errore 
+l'ausilio di una funzione che utilizza la media e deviazione standard della differenza tra un errore 
 e quello successivo.
 
-Controllando diversi grafici si è potuto notato che, per molte serie, in prossimità del periodo 
-relativo ad un passo (stride) l'errore inizia ad alzarsi, in questo modo dovrebbe essere possibile 
+Controllando diversi grafici si è potuto notare che, per alcune serie, in prossimità del periodo 
+relativo ad un passo (stride), l'errore inizia ad alzarsi, in questo modo dovrebbe essere possibile 
 calcolare la durata di un passo.
 Questo però non succede sempre, con alcune serie questo fenomeno non si manifesta o comunque
 si manifesta ma non in corrispondenza del periodo legato ad un passo, rendendo quindi impossibile
 reperire l'informazione necessaria.
 
-Questo potrebbe essere causato dal fatto che la funzione di seasonal decompose ``aggiusta'' la componente
-di residui per riuscire ad ottenere una periodicità nella componente di stagionalità.
+A differenza di come sperato, cioè che l'unica stagionalità che si somiglia in entrambe le metà
+di una serie sia quella che si riferisce ad un passo, si può notare come tra le due parti ci siano
+molte stagionalità che si equivalgono (quindi con basso errore).
 
-Tenendo a mente le considerazioni fatte fino questo punto possiamo quindi considerare i risultati ottenuti,
-e di conseguenza questa soluzione, come non validi, essendo che non si ha la sicurezza di poter
-ottenere risultati coerenti per la ricerca dell'informazione interessata.
+Tenendo a mente le considerazioni fatte fino questo punto possiamo considerare i risultati ottenuti,
+e di conseguenza questa soluzione, come non validi.
+In altre parole, con il metodo sviluppato non si riesce ad estrapolare l'informazione di un passo. 
+Tuttavia questo metodo potrebbe essere utilizzato in altre applicazioni ove si necessita di trovare
+stagionalità simili tra due serie.
 
+
+\paragraph*{Altre possibili soluzioni non implementate}
+Un'ulteriore possibilità non esplorata potrebbe essere calcolare la correlazione tra la 
+serie originale e la sua stagionalità su più periodi per vedere effettivamente quanto esse 
+si correlino con la serie originale. In questa maniera si dovrebbe riuscire a trovare una stagionalità
+che si correla maggiormente rispetto alle altre trovando potenzialmente un'informazione ``importante''.
+L'utilizzo della correlazione potrebbe essere una tecnica più adatta alla soluzione di questo problema
+diversamente da come è stato implementato, ossia l'utilizzo della differenza tra stagionalità.
 
 
 \subsection{Conclusioni Finali}
 Prendendo in considerazione la prima soluzione, spiegata nella sezione precedente, possiamo concludere
-che la funzione di autocorrelazione può essere utilizzata per la soluzione a problemi di questa tipologia,
-più in particolare essa può essere utilizzata per trovare pattern e/o caratteristiche presenti nei dati, 
+che la funzione di autocorrelazione può essere utilizzata per la soluzione a problemi di questa tipologia.
+Più in particolare essa può essere utilizzata per trovare pattern e/o caratteristiche presenti nei dati, 
 che dal grafico potrebbero non essere evidenti.
 
-La seconda soluzione proposta invece non è stata utile allo scopo di trovare un singolo passo 
-relativo ad un soggetto. Normalmente consideriamo azioni abituali, come ad esempio il passo,
-come pattern, di un determinato periodo, che si ripetono nel tempo quando invece nella realtà non 
-è così. 
-Tuttavia, l'algoritmo presentato nella seconda soluzione, potrebbe essere utilizzato 
+La seconda soluzione proposta, invece, non è stata utile allo scopo di trovare un singolo passo 
+relativo ad un soggetto. 
+É probabile che, con un algoritmo leggermente diverso, si potrebbe riuscire ad estrapolare informazioni
+importati dalla stagionalità.
+Tuttavia, l'algoritmo presentato nella seconda soluzione, può essere utilizzato 
 in altre applicazioni la cui necessità ricade sul trovare periodi in cui occorrono stagionalità simili 
-appartenenti a serie temporali diverse, oppure esso potrebbe essere preso come spunto implementativo per la creazione di un ulteriore 
-algoritmo.
+appartenenti a serie temporali diverse.
 
-In conclusione, possiamo constatare che le tecniche utilizzate per l'analisi di serie temporali
+In conclusione, possiamo constatare che le tecniche utilizzate per l'analisi di serie temporali,
 possono essere d'aiuto per una prima analisi non accurata del problema,
 non sostituendo però le tecniche tuttora utilizzate per analisi a problemi di questa tipologia.
-
-
